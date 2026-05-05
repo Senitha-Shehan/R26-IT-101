@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'home_screen.dart';
 
 class AllSetScreen extends StatefulWidget {
   const AllSetScreen({super.key});
@@ -114,7 +115,10 @@ class _AllSetScreenState extends State<AllSetScreen>
                 height: 54,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Navigate to scan screen
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF4CAF50),
