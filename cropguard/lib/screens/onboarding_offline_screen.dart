@@ -168,7 +168,7 @@ class _OnboardingOfflineScreenState extends State<OnboardingOfflineScreen>
                 const SizedBox(height: 16),
 
                 const Text(
-                  'Runs fully on-device using TinyML.\nNo internet needed.',
+                  'No internet needed.',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Color(0xFF888888), height: 1.6),
                 ),
