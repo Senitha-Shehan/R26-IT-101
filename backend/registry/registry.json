@@ -1,0 +1,38 @@
+{
+  "north_central_dry_zone": {
+    "model_path": "models/north_central_dry_zone_model.h5",
+    "accuracy": 0.9222222222222223
+  },
+  "southern_wet_zone": {
+    "model_path": "models/southern_wet_zone_model.h5",
+    "accuracy": 0.9710144927536232
+  },
+  "northern_dry_zone": {
+    "model_path": "models/northern_dry_zone_model.h5",
+    "accuracy": 0.9594594594594594
+  },
+  "eastern_dry_zone": {
+    "model_path": "models/eastern_dry_zone_model.h5",
+    "accuracy": 0.9849624060150376
+  },
+  "western_wet_zone": {
+    "model_path": "models/western_wet_zone_model.h5",
+    "accuracy": 0.9710144927536232
+  },
+  "central_highlands": {
+    "model_path": "models/central_highlands_model.h5",
+    "accuracy": 1.0
+  },
+  "uva_zone": {
+    "model_path": "models/uva_zone_model.h5",
+    "accuracy": 1.0
+  },
+  "northwestern_intermediate": {
+    "model_path": "models/northwestern_intermediate_model.h5",
+    "accuracy": 1.0
+  },
+  "sabaragamuwa_zone": {
+    "model_path": "models/sabaragamuwa_zone_model.h5",
+    "accuracy": 1.0
+  }
+}

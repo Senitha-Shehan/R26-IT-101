@@ -1,0 +1,24 @@
+Disease,Zone
+Bacterial Leaf Blight,north_central_dry_zone
+Bacterial Leaf Blight,eastern_dry_zone
+Brown Spot,southern_wet_zone
+Brown Spot,western_wet_zone
+Healthy Rice Leaf,north_central_dry_zone
+Healthy Rice Leaf,southern_wet_zone
+Healthy Rice Leaf,northern_dry_zone
+Healthy Rice Leaf,eastern_dry_zone
+Healthy Rice Leaf,western_wet_zone
+Healthy Rice Leaf,central_highlands
+Healthy Rice Leaf,uva_zone
+Healthy Rice Leaf,northwestern_intermediate
+Healthy Rice Leaf,sabaragamuwa_zone
+Leaf Blast,central_highlands
+Leaf Blast,uva_zone
+Leaf scald,northwestern_intermediate
+Leaf scald,sabaragamuwa_zone
+Narrow Brown Leaf Spot,eastern_dry_zone
+Narrow Brown Leaf Spot,north_central_dry_zone
+Rice Hispa,northern_dry_zone
+Rice Hispa,eastern_dry_zone
+Sheath Blight,southern_wet_zone
+Sheath Blight,western_wet_zone
