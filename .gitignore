@@ -18,3 +18,5 @@ data_active_learning/
 test_images/
 test_images_unseen/
 CropGuard_Final_Backup_V4/
+backend/model_compression/temp_models/
+*.log
