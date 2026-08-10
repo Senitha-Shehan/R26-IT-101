@@ -1,16 +1,14 @@
-# cropguard
+# CropGuard Mobile Application
 
-A new Flutter project.
+An offline-first Flutter application for rice leaf disease detection using regional TFLite FP16 models.
 
-## Getting Started
+## 📖 Setup & Installation Guide for Team Members
 
-This project is a starting point for a Flutter application.
+For detailed step-by-step installation commands and package descriptions, refer to the **[SETUP_GUIDE.md](file:///c:/SLIIT/4Y%201S/Research/R26-IT-101/cropguard/SETUP_GUIDE.md)**.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Quick Start
+```bash
+cd cropguard
+flutter pub get
+flutter run
+```
