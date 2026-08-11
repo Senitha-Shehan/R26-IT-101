@@ -18,7 +18,8 @@ class HomeScreen extends StatelessWidget {
             Image.asset(
               'assets/cropguard_logo.png',
               width: 180,
-              height: 160,
+              height: 180,
+              fit: BoxFit.contain,
               errorBuilder: (context, error, stackTrace) => const Icon(
                 Icons.energy_savings_leaf_rounded,
                 size: 100,
