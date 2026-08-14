@@ -46,10 +46,13 @@ def label_sample():
         print("Invalid MongoDB Sample ID.")
         return
 
-    sample = uncertain_samples.find_one({
-        "_id": object_id,
-        "status": "pending"
-    })
+    query = {"status": {"$in": ["pending", "pending_review"]}}
+    if object_id:
+        query["$or"] = [{"_id": object_id}, {"sample_id": sample_id}]
+    else:
+        query["sample_id"] = sample_id
+
+    sample = uncertain_samples.find_one(query)
 
     if not sample:
 
@@ -117,19 +120,13 @@ def label_sample():
     expert_label = CLASSES[choice - 1]
 
     result = uncertain_samples.update_one(
-
-        {
-            "_id": object_id,
-            "status": "pending"
-        },
-
+        {"_id": sample["_id"]},
         {
             "$set": {
                 "expert_label": expert_label,
                 "status": "annotated"
             }
         }
-
     )
 
     if result.modified_count == 1:

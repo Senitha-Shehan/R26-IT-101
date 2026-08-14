@@ -17,6 +17,16 @@ data_v41/
 data_active_learning/
 test_images/
 test_images_unseen/
+uploaded_samples/
 CropGuard_Final_Backup_V4/
 backend/model_compression/temp_models/
 *.log
+
+# Node & Frontend (Phase 6 Expert Web App)
+node_modules/
+dist/
+expert_web/node_modules/
+expert_web/dist/
+expert_web/.env
+expert_web/.env.local
+expert_web/.env.*.local
