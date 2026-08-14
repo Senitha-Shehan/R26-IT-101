@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/active_learning_sample.dart';
 import '../../models/detection_result.dart';
+import 'http_active_learning_sync_service.dart';
 
 class ActiveLearningQueueService {
   static const String _queuePrefsKey = 'cropguard_active_learning_queue_v1';
@@ -84,6 +85,8 @@ class ActiveLearningQueueService {
       await prefs.setString(_queuePrefsKey, jsonEncode(jsonList));
 
       debugPrint('ActiveLearningQueueService: Enqueued uncertain sample ($sampleId) to persistent offline queue.');
+      // Auto-trigger sync in background if internet is available
+      syncPendingSamples();
       return sample;
     } catch (e) {
       debugPrint('ActiveLearningQueueService enqueue error: $e');
@@ -170,6 +173,22 @@ class ActiveLearningQueueService {
       }
     } catch (e) {
       debugPrint('Error deleting archived image file: $e');
+    }
+  }
+
+  /// Triggers REST API synchronization for all pending/failed samples.
+  /// Safe to call anywhere; returns the count of uploaded samples.
+  Future<int> syncPendingSamples() async {
+    try {
+      final pending = await getPendingSamples();
+      if (pending.isEmpty) {
+        return 0;
+      }
+      final syncService = HttpActiveLearningSyncService(queueService: this);
+      return await syncService.syncPendingSamples(pending);
+    } catch (e) {
+      debugPrint('ActiveLearningQueueService syncPendingSamples error: $e');
+      return 0;
     }
   }
 }
