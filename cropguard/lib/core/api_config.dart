@@ -12,8 +12,8 @@ class ApiConfig {
     }
     // Auto-detect default host based on platform
     if (Platform.isAndroid) {
-      // 192.168.1.88 is the dev PC LAN IP (bypasses VMware 10.0.x.x virtual adapter conflicts on Windows)
-      return 'http://192.168.1.88:8000';
+      // 172.20.10.4 is the current dev PC LAN IP (10.0.2.2 for Android Emulator)
+      return 'http://172.20.10.4:8000';
     } else {
       return 'http://localhost:8000';
     }
