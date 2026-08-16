@@ -1,4 +1,5 @@
 import os
+import socket
 import sys
 
 # Ensure backend root directory is in sys.path
@@ -6,8 +7,30 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
+import dns.resolver
 from dotenv import load_dotenv
 from pymongo import MongoClient
+
+# Fallback DNS resolution for local routers/ISPs that fail SRV/hostname lookups for *.mongodb.net
+try:
+    _orig_getaddrinfo = socket.getaddrinfo
+    _custom_resolver = dns.resolver.Resolver(configure=False)
+    _custom_resolver.nameservers = ["8.8.8.8", "1.1.1.1", "8.8.4.4"]
+
+    def _patched_getaddrinfo(host, port, family=0, type=0, proto=0, flags=0):
+        try:
+            return _orig_getaddrinfo(host, port, family, type, proto, flags)
+        except socket.gaierror:
+            if isinstance(host, str) and "mongodb.net" in host:
+                answers = _custom_resolver.resolve(host, "A")
+                if answers:
+                    return _orig_getaddrinfo(answers[0].address, port, family, type, proto, flags)
+            raise
+
+    socket.getaddrinfo = _patched_getaddrinfo
+    dns.resolver.default_resolver = _custom_resolver
+except Exception:
+    pass
 
 load_dotenv()
 

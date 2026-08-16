@@ -1,15 +1,31 @@
+# Python & Virtual Environments
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+**/__pycache__/
+*.py[cod]
+*$py.class
 .venv/
 venv/
+.pytest_cache/
+
+# Environment Variables & Secrets
 .env
+.env.*
+*.env
+*.env.local
+*.env.*.local
+key.properties
+*.jks
+*.keystore
+
+# IDE & OS Files
 .idea/
 .vscode/
-.pytest_cache/
 .DS_Store
 Thumbs.db
+*.swp
+*.swo
+
+# Datasets & Backups
 raw_images/
 data/
 data_v2/
@@ -18,15 +34,30 @@ data_active_learning/
 test_images/
 test_images_unseen/
 uploaded_samples/
+**/uploaded_samples/
 CropGuard_Final_Backup_V4/
 backend/model_compression/temp_models/
 *.log
 
 # Node & Frontend (Phase 6 Expert Web App)
 node_modules/
+**/node_modules/
 dist/
-expert_web/node_modules/
-expert_web/dist/
-expert_web/.env
-expert_web/.env.local
-expert_web/.env.*.local
+**/dist/
+.output/
+.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Flutter / Mobile App
+.dart_tool/
+**/.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+**/build/
+cropguard/build/
+cropguard/android/.gradle/
+cropguard/android/local.properties
