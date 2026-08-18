@@ -1,9 +1,22 @@
 import 'package:flutter/material.dart';
+import '../services/active_learning/active_learning_queue_service.dart';
 import 'detection/detection_screen.dart';
 import 'review/active_learning_review_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Auto-sync any pending offline active learning samples on app launch if internet/backend is available
+    ActiveLearningQueueService().syncPendingSamples();
+  }
 
   @override
   Widget build(BuildContext context) {

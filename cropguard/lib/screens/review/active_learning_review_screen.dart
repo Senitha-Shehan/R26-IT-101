@@ -31,6 +31,20 @@ class _ActiveLearningReviewScreenState extends State<ActiveLearningReviewScreen>
     });
   }
 
+  Future<void> _syncSamples() async {
+    setState(() => _isLoading = true);
+    final synced = await _queueService.syncPendingSamples();
+    await _loadSamples();
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(synced > 0
+            ? 'Successfully synced $synced sample(s) to MongoDB Atlas'
+            : 'No pending samples synced (Backend offline or queue empty)'),
+      ),
+    );
+  }
+
   Future<void> _deleteSample(String id) async {
     await _queueService.deleteSample(id);
     await _loadSamples();
@@ -151,6 +165,11 @@ class _ActiveLearningReviewScreenState extends State<ActiveLearningReviewScreen>
         backgroundColor: const Color(0xFF1F1F1F),
         elevation: 0,
         actions: [
+          IconButton(
+            icon: const Icon(Icons.cloud_upload_outlined),
+            tooltip: 'Sync with MongoDB Atlas',
+            onPressed: _syncSamples,
+          ),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _loadSamples,
