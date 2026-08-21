@@ -10,10 +10,12 @@ class ApiConfig {
     if (_overrideBaseUrl.isNotEmpty) {
       return _overrideBaseUrl;
     }
-    // Auto-detect default host based on platform
+    // Auto-detect default host based on platform.
     if (Platform.isAndroid) {
-      // 172.20.10.4 is the current dev PC LAN IP (10.0.2.2 for Android Emulator)
-      return 'http://172.20.10.4:8000';
+      // Android emulator reaches the host machine's localhost via 10.0.2.2.
+      // For a physical Android device, override with the dev PC's LAN IP
+      // (currently 10.10.99.20) via ApiConfig.baseUrl = '...'.
+      return 'http://10.0.2.2:8000';
     } else {
       return 'http://localhost:8000';
     }
@@ -25,4 +27,10 @@ class ApiConfig {
 
   static String get healthEndpoint => '$baseUrl/api/health';
   static String get uploadUncertainSampleEndpoint => '$baseUrl/api/uncertain-samples';
+
+  /// RAG treatment recommendation endpoint (POST, JSON body).
+  static String get treatmentEndpoint => '$baseUrl/api/disease/treatment';
+
+  /// Gemini-backed translation endpoint (POST, JSON body).
+  static String get translationEndpoint => '$baseUrl/api/translation/translate';
 }

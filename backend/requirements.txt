@@ -52,3 +52,11 @@ bcrypt==4.3.0
 pytest==8.3.4
 httpx==0.28.1
 
+# --- RAG treatment recommendation subsystem (knowledge base = knowledge_base/*.pdf) ---
+pypdf==5.1.0
+# sentence-transformers pulls in torch (large download on first install) and
+# provides the local multilingual embedding model paraphrase-multilingual-MiniLM-L12-v2.
+sentence-transformers==3.3.1
+# Generation uses a local Ollama server (install separately: https://ollama.com,
+# then `ollama pull llama3.1`). Called over HTTP via the existing `requests` dep.
+
