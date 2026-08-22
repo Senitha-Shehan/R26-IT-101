@@ -12,6 +12,8 @@ if PROJECT_ROOT not in sys.path:
 from api.routes.uncertain_samples import router as uncertain_samples_router
 from api.routes.auth import router as auth_router
 from api.routes.expert_reviews import router as expert_reviews_router
+from api.routes.treatment import router as treatment_router
+from api.routes.translation import router as translation_router
 
 app = FastAPI(
     title="CropGuard Active Learning & Expert Portal REST API",
@@ -44,6 +46,8 @@ app.mount("/uploaded_samples", StaticFiles(directory=UPLOADED_SAMPLES_DIR), name
 app.include_router(uncertain_samples_router)
 app.include_router(auth_router)
 app.include_router(expert_reviews_router)
+app.include_router(treatment_router)
+app.include_router(translation_router)
 
 
 if __name__ == "__main__":
