@@ -25,6 +25,12 @@ Thumbs.db
 *.swp
 *.swo
 
+# RAG treatment subsystem — regenerable build artifact (run `python -m rag.ingest`)
+backend/knowledge_base/index/
+# Source PDFs are large (~135 MB). Uncomment the next line to keep them out of git
+# if your team does not need the raw sources committed:
+# backend/knowledge_base/*.pdf
+
 # Datasets & Backups
 raw_images/
 data/
