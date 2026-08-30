@@ -1,11 +1,20 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:camera/camera.dart';
+import '../../l10n/app_localizations.dart';
 import '../../core/constants/regional_models_config.dart';
 import '../../models/detection_result.dart';
 import '../../models/region_model_config.dart';
 import '../../services/tflite/detection_service.dart';
+import '../../services/user_preferences.dart';
+import '../../widgets/corner_brackets.dart';
+import '../../widgets/camera_overlay.dart';
+import '../../core/theme/app_theme.dart';
+import '../../core/utils/region_localizer.dart';
 import '../result/result_screen.dart';
+
+enum ScanStep { camera, preview, analyzing }
 
 class DetectionScreen extends StatefulWidget {
   const DetectionScreen({super.key});
@@ -14,282 +23,418 @@ class DetectionScreen extends StatefulWidget {
   State<DetectionScreen> createState() => _DetectionScreenState();
 }
 
-class _DetectionScreenState extends State<DetectionScreen> {
+class _DetectionScreenState extends State<DetectionScreen>
+    with TickerProviderStateMixin {
   final ImagePicker _picker = ImagePicker();
   final DetectionService _detectionService = DetectionService();
 
+  CameraController? _cameraController;
+  bool _isCameraInitialized = false;
+
   File? _selectedImage;
   RegionModelConfig _selectedRegion = RegionalModelsConfig.defaultRegion;
-  bool _isProcessing = false;
+  ScanStep _currentStep = ScanStep.camera;
   String? _errorMessage;
 
-  Future<void> _pickImage(ImageSource source) async {
+  late AnimationController _bracketController;
+  late Animation<double> _bracketAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _bracketController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+    _bracketAnimation = Tween(begin: 0.85, end: 1.0).animate(_bracketController);
+
+    _loadRegion();
+    _initCamera();
+  }
+
+  Future<void> _loadRegion() async {
+    final region = await UserPreferences.getSelectedRegion();
+    if (!mounted) return;
+    setState(() => _selectedRegion = region);
+  }
+
+  Future<void> _initCamera() async {
+    try {
+      final cameras = await availableCameras();
+      if (cameras.isNotEmpty) {
+        _cameraController = CameraController(
+          cameras.first,
+          ResolutionPreset.high,
+          enableAudio: false,
+        );
+        await _cameraController!.initialize();
+        if (!mounted) return;
+        setState(() => _isCameraInitialized = true);
+      }
+    } catch (e) {
+      debugPrint("Camera init error: $e");
+    }
+  }
+
+  Future<void> _captureCameraImage() async {
+    if (_cameraController == null || !_cameraController!.value.isInitialized) return;
+    try {
+      final XFile photo = await _cameraController!.takePicture();
+      setState(() {
+        _selectedImage = File(photo.path);
+        _currentStep = ScanStep.preview;
+        _errorMessage = null;
+      });
+    } catch (e) {
+      setState(() => _errorMessage = e.toString());
+    }
+  }
+
+  Future<void> _pickGalleryImage() async {
     try {
       final XFile? pickedFile = await _picker.pickImage(
-        source: source,
+        source: ImageSource.gallery,
         maxWidth: 1080,
         maxHeight: 1080,
         imageQuality: 90,
       );
-
       if (pickedFile != null) {
         setState(() {
           _selectedImage = File(pickedFile.path);
+          _currentStep = ScanStep.preview;
           _errorMessage = null;
         });
       }
     } catch (e) {
-      setState(() {
-        _errorMessage = 'Failed to pick image: $e';
-      });
+      setState(() => _errorMessage = e.toString());
     }
   }
 
-  Future<void> _runDetection() async {
+  Future<void> _runAnalysis() async {
     if (_selectedImage == null) return;
 
     setState(() {
-      _isProcessing = true;
+      _currentStep = ScanStep.analyzing;
       _errorMessage = null;
     });
 
     try {
+      await Future.delayed(const Duration(milliseconds: 600));
+
       final DetectionResult result = await _detectionService.detectDisease(
         imageFile: _selectedImage!,
         regionConfig: _selectedRegion,
       );
 
       if (!mounted) return;
+      setState(() => _currentStep = ScanStep.camera);
 
       Navigator.push(
         context,
-        MaterialPageRoute(
-          builder: (_) => ResultScreen(result: result),
-        ),
+        MaterialPageRoute(builder: (_) => ResultScreen(result: result)),
       );
     } catch (e) {
+      if (!mounted) return;
       setState(() {
+        _currentStep = ScanStep.preview;
         _errorMessage = e.toString();
       });
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isProcessing = false;
-        });
-      }
     }
   }
 
   @override
   void dispose() {
+    _cameraController?.dispose();
+    _bracketController.dispose();
     _detectionService.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final regionName = RegionLocalizer.getDisplayName(
+      context,
+      _selectedRegion.regionId,
+      fallback: _selectedRegion.displayName,
+    );
+
+    String appBarTitle;
+    switch (_currentStep) {
+      case ScanStep.preview:
+        appBarTitle = l?.previewLeafPhoto ?? 'Preview Leaf Photo';
+        break;
+      case ScanStep.analyzing:
+        appBarTitle = l?.analyzingTitle ?? 'Analyzing';
+        break;
+      default:
+        appBarTitle = l?.scanCropLeaf ?? 'Scan Crop Leaf';
+    }
+
     return Scaffold(
-      backgroundColor: const Color(0xFF141414),
+      backgroundColor: AppTheme.darkBg,
       appBar: AppBar(
-        title: const Text('CropGuard Detection'),
-        backgroundColor: const Color(0xFF1F1F1F),
-        elevation: 0,
+        title: Text(appBarTitle),
+        backgroundColor: AppTheme.surfaceDark,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.photo_library_outlined, color: AppTheme.accentGreen),
+            tooltip: l?.chooseFromGallery ?? 'Choose from Gallery',
+            onPressed: _pickGalleryImage,
+          ),
+        ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Region Selector Card
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF222222),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: Colors.grey.shade800),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Agricultural Region Model',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    DropdownButtonHideUnderline(
-                      child: DropdownButton<RegionModelConfig>(
-                        value: _selectedRegion,
-                        isExpanded: true,
-                        dropdownColor: const Color(0xFF2C2C2C),
-                        icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF4CAF50)),
-                        items: RegionalModelsConfig.allRegions.map((region) {
-                          return DropdownMenuItem<RegionModelConfig>(
-                            value: region,
-                            child: Text(
-                              region.displayName,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (RegionModelConfig? newRegion) {
-                          if (newRegion != null) {
-                            setState(() {
-                              _selectedRegion = newRegion;
-                            });
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // Image Preview Area
-              Container(
-                height: 260,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF1A1A1A),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: _selectedImage != null
-                        ? const Color(0xFF4CAF50)
-                        : Colors.grey.shade800,
-                    width: 2,
-                  ),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(14),
-                  child: _selectedImage != null
-                      ? Image.file(
-                          _selectedImage!,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                        )
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(
-                              Icons.center_focus_weak_rounded,
-                              size: 64,
-                              color: Color(0xFF4CAF50),
-                            ),
-                            SizedBox(height: 12),
-                            Text(
-                              'Select or capture a leaf photo',
-                              style: TextStyle(color: Colors.grey, fontSize: 15),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              'Target: Paddy leaf disease detection',
-                              style: TextStyle(color: Colors.grey, fontSize: 12),
-                            ),
-                          ],
-                        ),
-                ),
-              ),
-
-              if (_errorMessage != null) ...[
-                const SizedBox(height: 12),
-                Text(
-                  _errorMessage!,
-                  style: const TextStyle(color: Colors.redAccent, fontSize: 13),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-
-              const SizedBox(height: 24),
-
-              // Camera & Gallery Buttons Row
-              Row(
+        child: Column(
+          children: [
+            // Region Badge Bar
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              color: AppTheme.surfaceDark,
+              child: Row(
                 children: [
+                  const Icon(Icons.location_on, color: AppTheme.accentGreen, size: 16),
+                  const SizedBox(width: 6),
                   Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: _isProcessing ? null : () => _pickImage(ImageSource.camera),
-                      icon: const Icon(Icons.camera_alt),
-                      label: const Text('Camera'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF2C2C2C),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
+                    child: Text(
+                      l?.activeModel(regionName) ?? 'Active Model: $regionName',
+                      style: const TextStyle(
+                          color: AppTheme.textPrimary, fontSize: 13, fontWeight: FontWeight.w600),
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: _isProcessing ? null : () => _pickImage(ImageSource.gallery),
-                      icon: const Icon(Icons.photo_library),
-                      label: const Text('Gallery'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF2C2C2C),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
+                  Text(
+                    l?.localFP16Engine ?? 'Local FP16 Engine',
+                    style: const TextStyle(
+                        color: AppTheme.accentGreen, fontSize: 11, fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
+            ),
 
-              const SizedBox(height: 20),
-
-              // Run Detection Action Button
-              ElevatedButton(
-                onPressed: (_selectedImage == null || _isProcessing)
-                    ? null
-                    : _runDetection,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF4CAF50),
-                  foregroundColor: Colors.white,
-                  disabledBackgroundColor: const Color(0xFF2E4D30),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  elevation: 4,
-                ),
-                child: _isProcessing
-                    ? Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          ),
-                          SizedBox(width: 12),
-                          Text(
-                            'Processing TFLite Inference...',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      )
-                    : const Text(
-                        'Detect Disease (FP16 Local)',
-                        style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
-                      ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: _buildMainView(l, regionName),
               ),
-            ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMainView(AppLocalizations? l, String regionName) {
+    switch (_currentStep) {
+      case ScanStep.camera:
+        return _buildCameraView(l);
+      case ScanStep.preview:
+        return _buildPreviewView(l);
+      case ScanStep.analyzing:
+        return _buildAnalyzingView(l, regionName);
+    }
+  }
+
+  Widget _buildCameraView(AppLocalizations? l) {
+    return Column(
+      children: [
+        Expanded(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                _isCameraInitialized
+                    ? CameraPreview(_cameraController!)
+                    : Container(
+                        color: Colors.black,
+                        child: const Center(
+                          child: CircularProgressIndicator(color: AppTheme.accentGreen),
+                        ),
+                      ),
+                CornerBrackets(opacity: _bracketAnimation.value),
+                const CameraOverlay(),
+                Positioned(
+                  bottom: 20,
+                  left: 20,
+                  right: 20,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.7),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.crop_free_rounded, color: AppTheme.accentGreen, size: 18),
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: Text(
+                            l?.positionLeaf ?? 'Position the paddy leaf inside the frame',
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
+        const SizedBox(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            IconButton(
+              iconSize: 32,
+              icon: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: const BoxDecoration(
+                  color: AppTheme.surfaceDark,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.photo_library, color: AppTheme.textPrimary),
+              ),
+              onPressed: _pickGalleryImage,
+            ),
+            GestureDetector(
+              onTap: _captureCameraImage,
+              child: Container(
+                width: 76,
+                height: 76,
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: AppTheme.accentGreen, width: 4),
+                ),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: AppTheme.accentGreen,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.camera_alt, color: Colors.white, size: 36),
+                ),
+              ),
+            ),
+            const SizedBox(width: 48),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPreviewView(AppLocalizations? l) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.file(
+              _selectedImage!,
+              fit: BoxFit.cover,
+              width: double.infinity,
+            ),
+          ),
+        ),
+        if (_errorMessage != null) ...[
+          const SizedBox(height: 12),
+          Text(
+            _errorMessage!,
+            style: const TextStyle(color: AppTheme.statusError, fontSize: 13),
+            textAlign: TextAlign.center,
+          ),
+        ],
+        const SizedBox(height: 20),
+        Row(
+          children: [
+            Expanded(
+              child: OutlinedButton(
+                onPressed: () {
+                  setState(() {
+                    _currentStep = ScanStep.camera;
+                    _selectedImage = null;
+                  });
+                },
+                child: Text(l?.retake ?? 'Retake'),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: OutlinedButton(
+                onPressed: _pickGalleryImage,
+                child: Text(l?.gallery ?? 'Gallery'),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        ElevatedButton.icon(
+          onPressed: _runAnalysis,
+          icon: const Icon(Icons.auto_awesome_rounded),
+          label: Text(l?.analyzeLeaf ?? 'Analyze Leaf'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildAnalyzingView(AppLocalizations? l, String regionName) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: AppTheme.surfaceDark,
+              shape: BoxShape.circle,
+              border: Border.all(color: AppTheme.accentGreen, width: 2),
+            ),
+            child: const CircularProgressIndicator(
+              color: AppTheme.accentGreen,
+              strokeWidth: 3,
+            ),
+          ),
+          const SizedBox(height: 24),
+          Text(
+            l?.analyzingOnDevice ?? 'Analyzing on your device...',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: AppTheme.textPrimary,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            l?.runningLocalModel(regionName) ?? 'Running local $regionName FP16 model',
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: AppTheme.textSecondary, fontSize: 14),
+          ),
+          const SizedBox(height: 20),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: AppTheme.surfaceDark,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.wifi_off_rounded, color: AppTheme.accentGreen, size: 16),
+                const SizedBox(width: 6),
+                Text(
+                  l?.offlineAIInference ?? '100% Offline AI Inference',
+                  style: const TextStyle(
+                      color: AppTheme.accentGreen, fontSize: 12, fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

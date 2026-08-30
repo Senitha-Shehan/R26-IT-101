@@ -1,19 +1,27 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import '../../l10n/app_localizations.dart';
 import '../../models/active_learning_sample.dart';
 import '../../services/active_learning/active_learning_queue_service.dart';
+import '../../core/constants/regional_models_config.dart';
+import '../../core/theme/app_theme.dart';
+import '../../core/utils/disease_localizer.dart';
+import '../../core/utils/region_localizer.dart';
 
 class ActiveLearningReviewScreen extends StatefulWidget {
   const ActiveLearningReviewScreen({super.key});
 
   @override
-  State<ActiveLearningReviewScreen> createState() => _ActiveLearningReviewScreenState();
+  State<ActiveLearningReviewScreen> createState() =>
+      _ActiveLearningReviewScreenState();
 }
 
-class _ActiveLearningReviewScreenState extends State<ActiveLearningReviewScreen> {
+class _ActiveLearningReviewScreenState
+    extends State<ActiveLearningReviewScreen> {
   final ActiveLearningQueueService _queueService = ActiveLearningQueueService();
   List<ActiveLearningSample> _samples = [];
   bool _isLoading = true;
+  String _selectedFilterKey = 'All'; // internal key, not displayed
 
   @override
   void initState() {
@@ -36,241 +44,364 @@ class _ActiveLearningReviewScreenState extends State<ActiveLearningReviewScreen>
     final synced = await _queueService.syncPendingSamples();
     await _loadSamples();
     if (!mounted) return;
+    final l = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(synced > 0
-            ? 'Successfully synced $synced sample(s) to MongoDB Atlas'
-            : 'No pending samples synced (Backend offline or queue empty)'),
+            ? (l?.syncedSamples(synced) ?? 'Synced $synced sample(s)')
+            : (l?.allSamplesUpToDate ?? 'All samples up to date')),
+        backgroundColor: AppTheme.accentGreen,
       ),
     );
   }
 
+  // ignore: unused_element
   Future<void> _deleteSample(String id) async {
     await _queueService.deleteSample(id);
     await _loadSamples();
     if (!mounted) return;
+    final l = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Sample removed from local queue')),
+      SnackBar(content: Text(l?.sampleRemovedFromQueue ?? 'Sample removed from queue')),
     );
   }
 
-  void _showSampleDetails(ActiveLearningSample sample) {
+  void _showCorrectionDialog(ActiveLearningSample sample) {
+    String selectedDisease = sample.predictedDisease;
+    final l = AppLocalizations.of(context);
+
     showModalBottomSheet(
       context: context,
-      backgroundColor: const Color(0xFF1F1F1F),
+      isScrollControlled: true,
+      backgroundColor: AppTheme.surfaceDark,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+            return Padding(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 20,
+                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Sample ID: ${sample.id}',
-                    style: const TextStyle(
-                      color: Colors.white70,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        l?.helpImproveDiagnosis ?? 'Help Improve Diagnosis',
+                        style: const TextStyle(
+                          color: AppTheme.textPrimary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close, color: AppTheme.textSecondary),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.file(
+                      File(sample.localImagePath),
+                      height: 160,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (ctx, err, stack) => Container(
+                        height: 160,
+                        color: AppTheme.darkBg,
+                        child: const Center(
+                          child: Icon(Icons.eco_rounded,
+                              color: AppTheme.accentGreen, size: 40),
+                        ),
+                      ),
                     ),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.close, color: Colors.white70),
-                    onPressed: () => Navigator.pop(context),
+                  const SizedBox(height: 14),
+                  Text(
+                    l?.aiPredicted(
+                          sample.predictedDisease,
+                          (sample.confidence * 100).toStringAsFixed(1),
+                        ) ??
+                        'AI Predicted: ${sample.predictedDisease} (${(sample.confidence * 100).toStringAsFixed(1)}%)',
+                    style: const TextStyle(
+                        color: AppTheme.statusWarning,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 12),
+                  Text(
+                    l?.selectCorrectDisease ?? 'Select Correct Disease Label:',
+                    style: const TextStyle(
+                        color: AppTheme.textPrimary,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<String>(
+                    initialValue: RegionalModelsConfig.globalClassLabels.contains(selectedDisease)
+                        ? selectedDisease
+                        : RegionalModelsConfig.globalClassLabels.first,
+                    dropdownColor: const Color(0xFF252D25),
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: AppTheme.darkBg,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide:
+                            const BorderSide(color: AppTheme.surfaceBorder),
+                      ),
+                    ),
+                    // Dropdown shows localized names but stores original class name
+                    items: RegionalModelsConfig.globalClassLabels.map((disease) {
+                      return DropdownMenuItem<String>(
+                        value: disease,
+                        child: Text(
+                          DiseaseLocalizer.getDisplayName(context, disease),
+                          style: const TextStyle(color: AppTheme.textPrimary),
+                        ),
+                      );
+                    }).toList(),
+                    onChanged: (val) {
+                      if (val != null) setModalState(() => selectedDisease = val);
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () async {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(l?.correctedLabelSaved(
+                                  DiseaseLocalizer.getDisplayName(
+                                      context, selectedDisease)) ??
+                              '✓ Corrected label saved as "$selectedDisease"'),
+                          backgroundColor: AppTheme.accentGreen,
+                        ),
+                      );
+                    },
+                    child: Text(l?.submitCorrection ?? 'Submit Correction'),
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.file(
-                  File(sample.localImagePath),
-                  height: 180,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    height: 180,
-                    color: const Color(0xFF2A2A2A),
-                    child: const Center(
-                      child: Icon(Icons.broken_image, color: Colors.grey, size: 40),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Predicted: ${sample.predictedDisease}',
-                style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                'Confidence: ${(sample.confidence * 100).toStringAsFixed(1)}% | Region: ${sample.regionDisplayName}',
-                style: const TextStyle(color: Colors.amber, fontSize: 14),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Model: ${sample.modelName}',
-                style: const TextStyle(color: Colors.grey, fontSize: 12),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Created: ${sample.timestamp.toLocal().toString().split('.')[0]}',
-                style: const TextStyle(color: Colors.grey, fontSize: 12),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    _deleteSample(sample.id);
-                  },
-                  icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
-                  label: const Text('Delete Sample', style: TextStyle(color: Colors.redAccent)),
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.redAccent),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
-                ),
-              ),
-            ],
-          ),
+            );
+          },
         );
       },
     );
   }
 
-  Color _getStatusColor(SampleSyncStatus status) {
-    switch (status) {
-      case SampleSyncStatus.pending:
-        return Colors.amber;
-      case SampleSyncStatus.synced:
-        return const Color(0xFF4CAF50);
-      case SampleSyncStatus.failed:
-        return Colors.redAccent;
+  List<ActiveLearningSample> get _filteredSamples {
+    if (_selectedFilterKey == 'Confirmed') {
+      return _samples
+          .where((s) => s.status == SampleSyncStatus.synced)
+          .toList();
+    } else if (_selectedFilterKey == 'Needs Review') {
+      return _samples
+          .where((s) => s.status == SampleSyncStatus.pending)
+          .toList();
     }
+    return _samples;
   }
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final filtered = _filteredSamples;
+
+    // Filter entries: key (internal) -> localized label
+    final filters = [
+      ('All', l?.filterAll ?? 'All'),
+      ('Confirmed', l?.filterConfirmed ?? 'Confirmed'),
+      ('Needs Review', l?.filterNeedsReview ?? 'Needs Review'),
+    ];
+
     return Scaffold(
-      backgroundColor: const Color(0xFF141414),
+      backgroundColor: AppTheme.darkBg,
       appBar: AppBar(
-        title: const Text('Active Learning Queue'),
-        backgroundColor: const Color(0xFF1F1F1F),
+        title: Text(l?.diagnosisHistory ?? 'Diagnosis History'),
+        backgroundColor: AppTheme.surfaceDark,
         elevation: 0,
         actions: [
           IconButton(
-            icon: const Icon(Icons.cloud_upload_outlined),
-            tooltip: 'Sync with MongoDB Atlas',
+            icon: const Icon(Icons.sync_rounded, color: AppTheme.accentGreen),
+            tooltip: l?.syncQueue ?? 'Sync Queue',
             onPressed: _syncSamples,
-          ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadSamples,
           ),
         ],
       ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: Color(0xFF4CAF50)))
-          : _samples.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.inventory_2_outlined, size: 64, color: Colors.grey),
-                      SizedBox(height: 16),
-                      Text(
-                        'No uncertain samples in queue',
-                        style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Filter Pills
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              color: AppTheme.surfaceDark,
+              child: Row(
+                children: filters.map((entry) {
+                  final key = entry.$1;
+                  final label = entry.$2;
+                  final isSelected = _selectedFilterKey == key;
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: ChoiceChip(
+                      label: Text(label),
+                      selected: isSelected,
+                      selectedColor: AppTheme.accentGreen,
+                      backgroundColor: AppTheme.darkBg,
+                      labelStyle: TextStyle(
+                        color: isSelected ? Colors.white : AppTheme.textSecondary,
+                        fontWeight:
+                            isSelected ? FontWeight.bold : FontWeight.normal,
                       ),
-                      SizedBox(height: 6),
-                      Text(
-                        'Predictions with confidence < 80% will appear here automatically',
-                        style: TextStyle(color: Colors.grey, fontSize: 13),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                )
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16),
-                  itemCount: _samples.length,
-                  itemBuilder: (context, index) {
-                    final sample = _samples[index];
-                    final confPercent = (sample.confidence * 100).toStringAsFixed(1);
-                    final statusColor = _getStatusColor(sample.status);
+                      onSelected: (_) =>
+                          setState(() => _selectedFilterKey = key),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
 
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1F1F1F),
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(color: Colors.grey.shade800),
-                      ),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(12),
-                        leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: SizedBox(
-                            width: 56,
-                            height: 56,
-                            child: Image.file(
-                              File(sample.localImagePath),
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) => Container(
-                                color: const Color(0xFF2A2A2A),
-                                child: const Icon(Icons.broken_image, color: Colors.grey, size: 24),
+            // List
+            Expanded(
+              child: _isLoading
+                  ? const Center(
+                      child: CircularProgressIndicator(
+                          color: AppTheme.accentGreen))
+                  : filtered.isEmpty
+                      ? Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(Icons.history_toggle_off_rounded,
+                                  size: 64, color: AppTheme.textSecondary),
+                              const SizedBox(height: 16),
+                              Text(
+                                l?.noDiagnosesFound ?? 'No diagnoses found',
+                                style: const TextStyle(
+                                    color: AppTheme.textPrimary,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
                               ),
-                            ),
+                              const SizedBox(height: 6),
+                              Text(
+                                l?.noDiagnosesDesc ??
+                                    'Scanned crops and uncertain predictions will appear here',
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                    color: AppTheme.textSecondary, fontSize: 13),
+                              ),
+                            ],
                           ),
-                        ),
-                        title: Text(
-                          sample.predictedDisease,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                          ),
-                        ),
-                        subtitle: Padding(
-                          padding: const EdgeInsets.only(top: 4),
-                          child: Text(
-                            'Region: ${sample.regionDisplayName}\nConf: $confPercent% • ID: ${sample.id}',
-                            style: const TextStyle(color: Colors.grey, fontSize: 12),
-                          ),
-                        ),
-                        trailing: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        )
+                      : ListView.builder(
+                          padding: const EdgeInsets.all(16),
+                          itemCount: filtered.length,
+                          itemBuilder: (context, index) {
+                            final sample = filtered[index];
+                            final confPercent =
+                                (sample.confidence * 100).toStringAsFixed(1);
+                            final isUncertain = sample.confidence < 0.80;
+                            final localizedDisease = DiseaseLocalizer
+                                .getDisplayName(context, sample.predictedDisease);
+                            final localizedRegion =
+                                RegionLocalizer.getDisplayName(
+                              context,
+                              sample.regionId,
+                              fallback: sample.regionDisplayName,
+                            );
+
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 12),
                               decoration: BoxDecoration(
-                                color: statusColor.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: statusColor),
-                              ),
-                              child: Text(
-                                sample.status.name.toUpperCase(),
-                                style: TextStyle(
-                                  color: statusColor,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
+                                color: AppTheme.surfaceDark,
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(
+                                  color: isUncertain
+                                      ? AppTheme.statusWarning
+                                          .withValues(alpha: 0.5)
+                                      : AppTheme.surfaceBorder,
                                 ),
                               ),
-                            ),
-                          ],
+                              child: ListTile(
+                                contentPadding: const EdgeInsets.all(12),
+                                leading: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: SizedBox(
+                                    width: 54,
+                                    height: 54,
+                                    child: Image.file(
+                                      File(sample.localImagePath),
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (ctx, err, stack) =>
+                                          Container(
+                                        color: AppTheme.darkBg,
+                                        child: const Icon(Icons.eco,
+                                            color: AppTheme.accentGreen,
+                                            size: 24),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                title: Text(
+                                  localizedDisease,
+                                  style: const TextStyle(
+                                    color: AppTheme.textPrimary,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                                subtitle: Padding(
+                                  padding: const EdgeInsets.only(top: 4),
+                                  child: Text(
+                                    '$localizedRegion • ${l?.confLabel(confPercent) ?? 'Conf: $confPercent%'}',
+                                    style: const TextStyle(
+                                        color: AppTheme.textSecondary,
+                                        fontSize: 12),
+                                  ),
+                                ),
+                                trailing: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: isUncertain
+                                        ? AppTheme.statusWarning
+                                            .withValues(alpha: 0.15)
+                                        : AppTheme.accentGreen
+                                            .withValues(alpha: 0.15),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    isUncertain
+                                        ? (l?.needsReview ?? 'Needs Review')
+                                        : (l?.confirmed ?? 'Confirmed'),
+                                    style: TextStyle(
+                                      color: isUncertain
+                                          ? AppTheme.statusWarning
+                                          : AppTheme.accentGreen,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                onTap: () => _showCorrectionDialog(sample),
+                              ),
+                            );
+                          },
                         ),
-                        onTap: () => _showSampleDetails(sample),
-                      ),
-                    );
-                  },
-                ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

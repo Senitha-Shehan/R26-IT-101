@@ -18,11 +18,12 @@ class HttpActiveLearningSyncService implements ActiveLearningSyncService {
   Future<bool> checkConnection() async {
     final List<String> candidateUrls = [
       ApiConfig.baseUrl,
-      if (!ApiConfig.baseUrl.contains('localhost')) 'http://localhost:8000',
       if (!ApiConfig.baseUrl.contains('127.0.0.1')) 'http://127.0.0.1:8000',
+      if (!ApiConfig.baseUrl.contains('localhost')) 'http://localhost:8000',
+      if (Platform.isAndroid && !ApiConfig.baseUrl.contains('172.20.10.13')) 'http://172.20.10.13:8000',
+      if (Platform.isAndroid && !ApiConfig.baseUrl.contains('10.0.2.2')) 'http://10.0.2.2:8000',
       if (Platform.isAndroid && !ApiConfig.baseUrl.contains('172.20.10.4')) 'http://172.20.10.4:8000',
       if (Platform.isAndroid && !ApiConfig.baseUrl.contains('192.168.1.88')) 'http://192.168.1.88:8000',
-      if (Platform.isAndroid && !ApiConfig.baseUrl.contains('10.0.2.2')) 'http://10.0.2.2:8000',
     ];
 
     for (final base in candidateUrls) {

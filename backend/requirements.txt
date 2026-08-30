@@ -36,7 +36,7 @@ tensorboard==2.16.2
 tensorboard-data-server==0.7.2
 tensorflow==2.16.2
 tensorflow-intel==2.16.2
-tensorflow-io-gcs-filesystem==0.31.0
+# tensorflow-io-gcs-filesystem==0.31.0  # Not available / required on Python 3.12
 termcolor==3.3.0
 threadpoolctl==3.6.0
 typing_extensions==4.16.0
@@ -57,6 +57,7 @@ pypdf==5.1.0
 # sentence-transformers pulls in torch (large download on first install) and
 # provides the local multilingual embedding model paraphrase-multilingual-MiniLM-L12-v2.
 sentence-transformers==3.3.1
+tf-keras>=2.16.0
 # Generation uses a local Ollama server (install separately: https://ollama.com,
 # then `ollama pull llama3.1`). Called over HTTP via the existing `requests` dep.
 
