@@ -14,14 +14,17 @@ from rag import config
 
 logger = logging.getLogger("rag.embeddings")
 
+import os
+
 _model = None
 
 
 def _get_model():
     global _model
     if _model is None:
-        # Imported lazily so simply importing the package (e.g. for the API
-        # health check) does not pull in torch until embeddings are needed.
+        # Enforce PyTorch backend for sentence-transformers to avoid TF/Keras 3 conflicts
+        os.environ["USE_TF"] = "0"
+        os.environ["USE_TORCH"] = "1"
         from sentence_transformers import SentenceTransformer
 
         logger.info("Loading embedding model '%s' ...", config.EMBEDDING_MODEL_NAME)

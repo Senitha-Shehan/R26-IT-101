@@ -1,0 +1,471 @@
+{
+  "@@locale": "en",
+
+  "appName": "CropGuard",
+  "@appName": { "description": "Application name" },
+
+  "continueBtn": "Continue",
+  "@continueBtn": {},
+
+  "skip": "Skip",
+  "@skip": {},
+
+  "getStarted": "Get Started",
+  "@getStarted": {},
+
+  "chooseLanguage": "Choose Language",
+  "@chooseLanguage": {},
+
+  "languageSubtitle": "Select your preferred language to continue",
+  "@languageSubtitle": {},
+
+  "langEnglish": "English",
+  "@langEnglish": {},
+
+  "langSinhala": "සිංහල",
+  "@langSinhala": {},
+
+  "langTamil": "தமிழ்",
+  "@langTamil": {},
+
+  "onboardingTitle1": "CropGuard",
+  "@onboardingTitle1": {},
+
+  "onboardingSubtitle1": "AI-Powered Paddy Disease Detection",
+  "@onboardingSubtitle1": {},
+
+  "onboardingDesc1": "Instantly diagnose rice crop diseases in the field using local deep learning models optimized for Sri Lankan agricultural zones.",
+  "@onboardingDesc1": {},
+
+  "onboardingTitle2": "Scan Your Crop",
+  "@onboardingTitle2": {},
+
+  "onboardingFeature1": "Use live camera or select from gallery",
+  "@onboardingFeature1": {},
+
+  "onboardingFeature2": "Runs 100% offline — no internet connection required",
+  "@onboardingFeature2": {},
+
+  "onboardingFeature3": "Instant local TFLite FP16 disease classification",
+  "@onboardingFeature3": {},
+
+  "selectYourRegion": "Select Your Region",
+  "@selectYourRegion": {},
+
+  "regionSubtitle": "CropGuard automatically selects tuned FP16 AI models based on your Sri Lankan agricultural zone.",
+  "@regionSubtitle": {},
+
+  "fp16LocalModel": "FP16 TFLite Local Model",
+  "@fp16LocalModel": {},
+
+  "confirmRegion": "Confirm Region",
+  "@confirmRegion": {},
+
+  "preparingCropGuard": "Preparing CropGuard",
+  "@preparingCropGuard": {},
+
+  "aiModel": "AI Model",
+  "@aiModel": {},
+
+  "preparingModel": "Preparing model for offline use... ({percent}%)",
+  "@preparingModel": {
+    "placeholders": {
+      "percent": { "type": "int" }
+    }
+  },
+
+  "readyForOfflineDetection": "✓ Ready for Offline Detection",
+  "@readyForOfflineDetection": {},
+
+  "allSetDesc": "FP16 local model loaded for {region}. CropGuard is completely configured for offline field use.",
+  "@allSetDesc": {
+    "placeholders": {
+      "region": { "type": "String" }
+    }
+  },
+
+  "regionalModelInstalled": "Regional FP16 Model Installed",
+  "@regionalModelInstalled": {},
+
+  "offlineEngineReady": "Offline Inference Engine Ready",
+  "@offlineEngineReady": {},
+
+  "regionActive": "{region} Active",
+  "@regionActive": {
+    "placeholders": {
+      "region": { "type": "String" }
+    }
+  },
+
+  "startUsingCropGuard": "Start Using CropGuard",
+  "@startUsingCropGuard": {},
+
+  "navHome": "Home",
+  "@navHome": {},
+
+  "navScan": "Scan",
+  "@navScan": {},
+
+  "navHistory": "History",
+  "@navHistory": {},
+
+  "navAlerts": "Alerts",
+  "@navAlerts": {},
+
+  "scanYourCrop": "Scan Your Crop",
+  "@scanYourCrop": {},
+
+  "scanDesc": "Detect possible diseases from a paddy leaf photo using offline AI.",
+  "@scanDesc": {},
+
+  "startScan": "Start Scan",
+  "@startScan": {},
+
+  "syncingOfflineSamples": "Syncing offline samples...",
+  "@syncingOfflineSamples": {},
+
+  "offlineAIReady": "● Offline AI Ready",
+  "@offlineAIReady": {},
+
+  "samplesQueuedForSync": "{count} sample(s) queued for sync",
+  "@samplesQueuedForSync": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "allSamplesSynced": "✓ Offline AI Ready • All samples synced",
+  "@allSamplesSynced": {},
+
+  "recentDiagnoses": "Recent Diagnoses",
+  "@recentDiagnoses": {},
+
+  "viewAll": "View All",
+  "@viewAll": {},
+
+  "regionalAlerts": "Regional Alerts",
+  "@regionalAlerts": {},
+
+  "alertsHub": "Alerts Hub",
+  "@alertsHub": {},
+
+  "pestAdvisoryTitle": "Pest Advisory: Rice Hispa Alert",
+  "@pestAdvisoryTitle": {},
+
+  "pestAdvisoryDesc": "High humidity reported in {region}. Check young paddy leaves.",
+  "@pestAdvisoryDesc": {
+    "placeholders": {
+      "region": { "type": "String" }
+    }
+  },
+
+  "confidence": "Confidence",
+  "@confidence": {},
+
+  "region": "Region",
+  "@region": {},
+
+  "scanCropLeaf": "Scan Crop Leaf",
+  "@scanCropLeaf": {},
+
+  "previewLeafPhoto": "Preview Leaf Photo",
+  "@previewLeafPhoto": {},
+
+  "analyzingTitle": "Analyzing",
+  "@analyzingTitle": {},
+
+  "activeModel": "Active Model: {region}",
+  "@activeModel": {
+    "placeholders": {
+      "region": { "type": "String" }
+    }
+  },
+
+  "localFP16Engine": "Local FP16 Engine",
+  "@localFP16Engine": {},
+
+  "positionLeaf": "Position the paddy leaf inside the frame",
+  "@positionLeaf": {},
+
+  "chooseFromGallery": "Choose from Gallery",
+  "@chooseFromGallery": {},
+
+  "retake": "Retake",
+  "@retake": {},
+
+  "gallery": "Gallery",
+  "@gallery": {},
+
+  "analyzeLeaf": "Analyze Leaf",
+  "@analyzeLeaf": {},
+
+  "analyzingOnDevice": "Analyzing on your device...",
+  "@analyzingOnDevice": {},
+
+  "runningLocalModel": "Running local {region} FP16 model",
+  "@runningLocalModel": {
+    "placeholders": {
+      "region": { "type": "String" }
+    }
+  },
+
+  "offlineAIInference": "100% Offline AI Inference",
+  "@offlineAIInference": {},
+
+  "detectionResult": "Detection Result",
+  "@detectionResult": {},
+
+  "highConfidencePrediction": "✓ High Confidence Prediction",
+  "@highConfidencePrediction": {},
+
+  "uncertainPrediction": "Uncertain Prediction (< 80%)",
+  "@uncertainPrediction": {},
+
+  "savedForExpertReview": "✓ Saved for Expert Review",
+  "@savedForExpertReview": {},
+
+  "uncertainDesc": "This prediction is uncertain and has been automatically saved for expert review.",
+  "@uncertainDesc": {},
+
+  "regionLabel": "Region: {region}",
+  "@regionLabel": {
+    "placeholders": {
+      "region": { "type": "String" }
+    }
+  },
+
+  "modelClassProbabilities": "Model Class Probabilities (Local FP16)",
+  "@modelClassProbabilities": {},
+
+  "helpImproveDiagnosis": "Help Improve This Diagnosis",
+  "@helpImproveDiagnosis": {},
+
+  "isDiagnosisAccurate": "Is this disease prediction accurate for your crop?",
+  "@isDiagnosisAccurate": {},
+
+  "thankyouConfirmed": "✓ Thank you! Diagnosis confirmed.",
+  "@thankyouConfirmed": {},
+
+  "confirmed": "Confirmed",
+  "@confirmed": {},
+
+  "looksRight": "Looks Right",
+  "@looksRight": {},
+
+  "reviewCorrect": "Review / Correct",
+  "@reviewCorrect": {},
+
+  "viewTreatmentGuide": "View Treatment Guide",
+  "@viewTreatmentGuide": {},
+
+  "scanAnotherCrop": "Scan Another Crop",
+  "@scanAnotherCrop": {},
+
+  "diagnosisHistory": "Diagnosis History",
+  "@diagnosisHistory": {},
+
+  "syncQueue": "Sync Queue",
+  "@syncQueue": {},
+
+  "filterAll": "All",
+  "@filterAll": {},
+
+  "filterConfirmed": "Confirmed",
+  "@filterConfirmed": {},
+
+  "filterNeedsReview": "Needs Review",
+  "@filterNeedsReview": {},
+
+  "noDiagnosesFound": "No diagnoses found",
+  "@noDiagnosesFound": {},
+
+  "noDiagnosesDesc": "Scanned crops and uncertain predictions will appear here",
+  "@noDiagnosesDesc": {},
+
+  "needsReview": "Needs Review",
+  "@needsReview": {},
+
+  "aiPredicted": "AI Predicted: {disease} ({confidence}%)",
+  "@aiPredicted": {
+    "placeholders": {
+      "disease": { "type": "String" },
+      "confidence": { "type": "String" }
+    }
+  },
+
+  "selectCorrectDisease": "Select Correct Disease Label:",
+  "@selectCorrectDisease": {},
+
+  "submitCorrection": "Submit Correction",
+  "@submitCorrection": {},
+
+  "correctedLabelSaved": "✓ Corrected label saved as \"{disease}\"",
+  "@correctedLabelSaved": {
+    "placeholders": {
+      "disease": { "type": "String" }
+    }
+  },
+
+  "syncedSamples": "Successfully synced {count} sample(s) with cloud database",
+  "@syncedSamples": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "allSamplesUpToDate": "All samples up to date (Queue synced or offline)",
+  "@allSamplesUpToDate": {},
+
+  "sampleRemovedFromQueue": "Sample removed from queue",
+  "@sampleRemovedFromQueue": {},
+
+  "regionConfTitle": "Region: {region}",
+  "@regionConfTitle": {
+    "placeholders": {
+      "region": { "type": "String" }
+    }
+  },
+
+  "confLabel": "Conf: {conf}%",
+  "@confLabel": {
+    "placeholders": {
+      "conf": { "type": "String" }
+    }
+  },
+
+  "alertsTitle": "Regional Alerts & Notices",
+  "@alertsTitle": {},
+
+  "catAll": "All",
+  "@catAll": {},
+
+  "catPestAlerts": "Pest Alerts",
+  "@catPestAlerts": {},
+
+  "catWeather": "Weather",
+  "@catWeather": {},
+
+  "profileSettings": "Profile & Settings",
+  "@profileSettings": {},
+
+  "farmerProfile": "Farmer Profile",
+  "@farmerProfile": {},
+
+  "sectionAiEngine": "AI & OFFLINE ENGINE",
+  "@sectionAiEngine": {},
+
+  "activeAgriculturalRegion": "Active Agricultural Region",
+  "@activeAgriculturalRegion": {},
+
+  "activeRegionDesc": "Loads regional FP16 TFLite model tuned for local disease factors.",
+  "@activeRegionDesc": {},
+
+  "nineRegionalModelsInstalled": "9 Regional FP16 Models Installed",
+  "@nineRegionalModelsInstalled": {},
+
+  "ready": "Ready",
+  "@ready": {},
+
+  "sectionInformation": "INFORMATION",
+  "@sectionInformation": {},
+
+  "aboutCropGuard": "About CropGuard",
+  "@aboutCropGuard": {},
+
+  "versionInfo": "AI Paddy Disease Detection v1.0.0",
+  "@versionInfo": {},
+
+  "fieldScanningGuide": "Field Scanning Guide",
+  "@fieldScanningGuide": {},
+
+  "fieldScanningGuideSub": "Tips for best camera lighting and leaf positioning",
+  "@fieldScanningGuideSub": {},
+
+  "fieldScanningTips": "Field Scanning Tips",
+  "@fieldScanningTips": {},
+
+  "tip1": "• Position leaf directly inside the scan frame.",
+  "@tip1": {},
+
+  "tip2": "• Ensure adequate natural sunlight daylight.",
+  "@tip2": {},
+
+  "tip3": "• Avoid severe shadows or extremely blurry photos.",
+  "@tip3": {},
+
+  "tip4": "• Predictions under 80% confidence are automatically saved for expert review.",
+  "@tip4": {},
+
+  "gotIt": "Got it",
+  "@gotIt": {},
+
+  "activeAIModelSet": "Active AI Model set to {region}",
+  "@activeAIModelSet": {
+    "placeholders": {
+      "region": { "type": "String" }
+    }
+  },
+
+  "cropGuardFooter": "CropGuard Sri Lanka • Offline-First Agricultural AI",
+  "@cropGuardFooter": {},
+
+  "sectionLanguage": "LANGUAGE",
+  "@sectionLanguage": {},
+
+  "language": "Language",
+  "@language": {},
+
+  "languageSettingDesc": "Choose your preferred language",
+  "@languageSettingDesc": {},
+
+  "diseaseNameBacterialLeafBlight": "Bacterial Leaf Blight",
+  "@diseaseNameBacterialLeafBlight": {},
+
+  "diseaseNameBrownSpot": "Brown Spot",
+  "@diseaseNameBrownSpot": {},
+
+  "diseaseNameHealthyRiceLeaf": "Healthy Rice Leaf",
+  "@diseaseNameHealthyRiceLeaf": {},
+
+  "diseaseNameLeafBlast": "Leaf Blast",
+  "@diseaseNameLeafBlast": {},
+
+  "diseaseNameLeafScald": "Leaf Scald",
+  "@diseaseNameLeafScald": {},
+
+  "diseaseNameNarrowBrownLeafSpot": "Narrow Brown Leaf Spot",
+  "@diseaseNameNarrowBrownLeafSpot": {},
+
+  "diseaseNameRiceHispa": "Rice Hispa",
+  "@diseaseNameRiceHispa": {},
+
+  "diseaseNameSheathBlight": "Sheath Blight",
+  "@diseaseNameSheathBlight": {},
+
+  "regionCentralHighlands": "Central Highlands",
+  "@regionCentralHighlands": {},
+
+  "regionUvaZone": "Uva Zone",
+  "@regionUvaZone": {},
+
+  "regionEasternDryZone": "Eastern Dry Zone",
+  "@regionEasternDryZone": {},
+
+  "regionNorthCentralDryZone": "North Central Dry Zone",
+  "@regionNorthCentralDryZone": {},
+
+  "regionNorthernDryZone": "Northern Dry Zone",
+  "@regionNorthernDryZone": {},
+
+  "regionNorthwesternIntermediate": "Northwestern Intermediate",
+  "@regionNorthwesternIntermediate": {},
+
+  "regionSabaragamuwaZone": "Sabaragamuwa Zone",
+  "@regionSabaragamuwaZone": {},
+
+  "regionSouthernWetZone": "Southern Wet Zone",
+  "@regionSouthernWetZone": {},
+
+  "regionWesternWetZone": "Western Wet Zone",
+  "@regionWesternWetZone": {}
+}

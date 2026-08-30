@@ -1,216 +1,357 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_localizations.dart';
+import '../core/theme/app_theme.dart';
+import '../services/locale_provider.dart';
 import 'region_select_screen.dart';
 
 class OnboardingOfflineScreen extends StatefulWidget {
-  const OnboardingOfflineScreen({super.key});
+  final LocaleProvider? localeProvider;
+
+  const OnboardingOfflineScreen({super.key, this.localeProvider});
 
   @override
-  State<OnboardingOfflineScreen> createState() =>
-      _OnboardingOfflineScreenState();
+  State<OnboardingOfflineScreen> createState() => _OnboardingOfflineScreenState();
 }
 
-class _OnboardingOfflineScreenState extends State<OnboardingOfflineScreen>
-    with TickerProviderStateMixin {
-  late AnimationController pulseCtrl;
-  late AnimationController fadeCtrl;
-  late Animation<double> pulse;
-  late Animation<double> fade;
+class _OnboardingOfflineScreenState extends State<OnboardingOfflineScreen> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
 
-  @override
-  void initState() {
-    super.initState();
-
-    pulseCtrl = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
-    )..repeat(reverse: true);
-
-    pulse = Tween(begin: 0.92, end: 1.0).animate(
-      CurvedAnimation(parent: pulseCtrl, curve: Curves.easeInOut),
-    );
-
-    fadeCtrl = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 700),
-    )..forward();
-
-    fade = CurvedAnimation(parent: fadeCtrl, curve: Curves.easeOut);
-  }
+  // 3 pages: 0 = Language, 1 = Welcome, 2 = Features
+  static const int _pageCount = 3;
 
   @override
   void dispose() {
-    pulseCtrl.dispose();
-    fadeCtrl.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
-  Widget ring(double size, double opacity) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: const Color(0xFF4CAF50).withOpacity(opacity),
-      ),
-    );
+  void _nextPage() {
+    if (_currentPage < _pageCount - 1) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const RegionSelectScreen()),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+
     return Scaffold(
-      backgroundColor: const Color(0xFF0F0F0F),
+      backgroundColor: AppTheme.darkBg,
       body: SafeArea(
-        child: FadeTransition(
-          opacity: fade,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 28),
-            child: Column(
-              children: [
-                const SizedBox(height: 60),
-
-                // Illustration
-                Expanded(
-                  child: Center(
-                    child: AnimatedBuilder(
-                      animation: pulse,
-                      builder: (_, __) {
-                        return Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Transform.scale(
-                              scale: pulse.value,
-                              child: ring(200, 0.06),
-                            ),
-                            Transform.scale(
-                              scale: pulse.value * 0.97,
-                              child: ring(156, 0.10),
-                            ),
-
-                            // Phone
-                            Container(
-                              width: 72,
-                              height: 110,
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF1C1C1C),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: Colors.grey.shade800),
-                              ),
-                              child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.eco_rounded,
-                                      color: Color(0xFF4CAF50), size: 22),
-                                  SizedBox(height: 8),
-                                  SizedBox(
-                                    width: 30,
-                                    height: 3,
-                                    child: DecoratedBox(
-                                      decoration: BoxDecoration(
-                                        color: Color(0xFF333333),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            Positioned(
-                              top: 46,
-                              right: 62,
-                              child: CircleAvatar(
-                                radius: 14,
-                                backgroundColor: const Color(0xFF2A2A2A),
-                                child: const Icon(
-                                  Icons.thumb_up_alt_rounded,
-                                  size: 14,
-                                  color: Color(0xFF4CAF50),
-                                ),
-                              ),
-                            ),
-                          ],
+        child: Column(
+          children: [
+            // Top Bar
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.eco_rounded, color: AppTheme.accentGreen, size: 24),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'CropGuard',
+                        style: TextStyle(
+                          color: AppTheme.textPrimary,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
+                  // Skip only visible on welcome+feature pages
+                  if (_currentPage > 0)
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const RegionSelectScreen()),
                         );
                       },
-                    ),
-                  ),
-                ),
-
-                // Dots
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(4, (i) {
-                    final active = i == 1;
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 3),
-                      width: active ? 24 : 6,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: active
-                            ? const Color(0xFF4CAF50)
-                            : const Color(0xFF3A3A3A),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    );
-                  }),
-                ),
-
-                const SizedBox(height: 36),
-
-                const Text(
-                  'Detects diseases\noffline',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                const Text(
-                  'No internet needed.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Color(0xFF888888), height: 1.6),
-                ),
-
-                const SizedBox(height: 40),
-
-                SizedBox(
-                  width: double.infinity,
-                  height: 54,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const RegionSelectScreen(),
-                        ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF4CAF50),
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                      child: Text(
+                        l?.skip ?? 'Skip',
+                        style: const TextStyle(color: AppTheme.textSecondary, fontSize: 14),
                       ),
                     ),
-                    child: const Text('Next'),
+                ],
+              ),
+            ),
+
+            // PageView
+            Expanded(
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (idx) => setState(() => _currentPage = idx),
+                children: [
+                  // Page 0: Language Selection (inline, no nav)
+                  _buildLanguagePage(),
+                  // Page 1: Welcome
+                  _buildWelcomePage(l),
+                  // Page 2: Features
+                  _buildFeaturesPage(l),
+                ],
+              ),
+            ),
+
+            // Page dots
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(_pageCount, (index) {
+                final isActive = index == _currentPage;
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  width: isActive ? 24 : 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: isActive ? AppTheme.accentGreen : AppTheme.surfaceBorder,
+                    borderRadius: BorderRadius.circular(4),
                   ),
+                );
+              }),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Primary Button
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              child: ElevatedButton(
+                onPressed: _nextPage,
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 54),
                 ),
-
-                const SizedBox(height: 16),
-
-                const Text(
-                  'Skip setup',
-                  style: TextStyle(color: Colors.white),
+                child: Text(
+                  _currentPage == _pageCount - 1
+                      ? (l?.getStarted ?? 'Get Started')
+                      : (l?.continueBtn ?? 'Continue'),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-                const SizedBox(height: 24),
-              ],
+  /// Page 0: Inline language selection (no separate screen, immediate effect)
+  Widget _buildLanguagePage() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 80,
+            height: 80,
+            decoration: const BoxDecoration(
+              color: AppTheme.primaryGreen,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.language_rounded, color: Colors.white, size: 44),
+          ),
+          const SizedBox(height: 24),
+          // Trilingual title — understandable before language is chosen
+          const Text(
+            'Choose Language\nභාෂාව තෝරන්න\nமொழியை தேர்ந்தெடுங்கள்',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: AppTheme.textPrimary,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              height: 1.6,
+            ),
+          ),
+          const SizedBox(height: 28),
+          _buildLangTile('en', 'English', 'English'),
+          const SizedBox(height: 12),
+          _buildLangTile('si', 'සිංහල', 'Sinhala'),
+          const SizedBox(height: 12),
+          _buildLangTile('ta', 'தமிழ்', 'Tamil'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLangTile(String code, String nativeName, String englishName) {
+    final provider = widget.localeProvider ?? LocaleProvider.instance;
+    final isSelected = provider.locale.languageCode == code;
+    return GestureDetector(
+      onTap: () => provider.setLocale(Locale(code)),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFF1B3A1B) : AppTheme.surfaceDark,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: isSelected ? AppTheme.accentGreen : AppTheme.surfaceBorder,
+            width: isSelected ? 2 : 1,
+          ),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    nativeName,
+                    style: TextStyle(
+                      color: isSelected ? AppTheme.accentGreen : AppTheme.textPrimary,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    englishName,
+                    style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13),
+                  ),
+                ],
+              ),
+            ),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 200),
+              child: isSelected
+                  ? const Icon(Icons.check_circle_rounded,
+                      color: AppTheme.accentGreen, size: 26, key: ValueKey('c'))
+                  : const Icon(Icons.radio_button_unchecked_rounded,
+                      color: AppTheme.textSecondary, size: 26, key: ValueKey('u')),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWelcomePage(AppLocalizations? l) {
+    return Padding(
+      padding: const EdgeInsets.all(28.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 140,
+            height: 140,
+            decoration: BoxDecoration(
+              color: AppTheme.primaryGreen.withValues(alpha: 0.15),
+              shape: BoxShape.circle,
+              border: Border.all(color: AppTheme.accentGreen.withValues(alpha: 0.3), width: 2),
+            ),
+            child: const Icon(Icons.eco_rounded, color: AppTheme.accentGreen, size: 72),
+          ),
+          const SizedBox(height: 36),
+          Text(
+            l?.appName ?? 'CropGuard',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: AppTheme.textPrimary,
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            l?.onboardingSubtitle1 ?? 'AI-Powered Paddy Disease Detection',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: AppTheme.accentGreen,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            l?.onboardingDesc1 ??
+                'Instantly diagnose rice crop diseases using local AI models for Sri Lankan agricultural zones.',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: AppTheme.textSecondary,
+              fontSize: 14,
+              height: 1.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFeaturesPage(AppLocalizations? l) {
+    return Padding(
+      padding: const EdgeInsets.all(28.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 140,
+            height: 140,
+            decoration: BoxDecoration(
+              color: AppTheme.primaryGreen.withValues(alpha: 0.15),
+              shape: BoxShape.circle,
+              border: Border.all(color: AppTheme.accentGreen.withValues(alpha: 0.3), width: 2),
+            ),
+            child: const Icon(Icons.center_focus_strong_rounded,
+                color: AppTheme.accentGreen, size: 72),
+          ),
+          const SizedBox(height: 36),
+          Text(
+            l?.onboardingTitle2 ?? 'Scan Your Crop',
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: AppTheme.textPrimary,
+              fontSize: 28,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 20),
+          _buildFeatureRow(Icons.camera_alt_rounded,
+              l?.onboardingFeature1 ?? 'Use live camera or select from gallery'),
+          const SizedBox(height: 12),
+          _buildFeatureRow(Icons.wifi_off_rounded,
+              l?.onboardingFeature2 ?? 'Runs 100% offline — no internet connection required'),
+          const SizedBox(height: 12),
+          _buildFeatureRow(Icons.verified_rounded,
+              l?.onboardingFeature3 ?? 'Instant local TFLite FP16 disease classification'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFeatureRow(IconData icon, String text) {
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: AppTheme.surfaceDark,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: AppTheme.surfaceBorder),
+          ),
+          child: Icon(icon, color: AppTheme.accentGreen, size: 20),
+        ),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Text(
+            text,
+            style: const TextStyle(
+              color: AppTheme.textPrimary,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 }
