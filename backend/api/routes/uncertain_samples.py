@@ -33,6 +33,34 @@ def health_check():
     return HealthResponse(status="ok")
 
 
+@router.get("/uncertain-samples/{sample_id}/review-status")
+def get_review_status(sample_id: str):
+    """Returns the expert review state for a mobile active-learning sample."""
+    collection = get_uncertain_collection()
+    if collection is None:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="MongoDB database connection unavailable.",
+        )
+
+    sample_id = sample_id.strip()
+    doc = collection.find_one({"sample_id": sample_id})
+    if not doc:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Sample with ID '{sample_id}' not found.",
+        )
+
+    return {
+        "sample_id": doc.get("sample_id", sample_id),
+        "status": doc.get("status", "pending_review"),
+        "expert_label": doc.get("expert_label"),
+        "expert_notes": doc.get("expert_notes"),
+        "reviewed_at": doc.get("reviewed_at"),
+        "reviewed_by": doc.get("reviewed_by"),
+    }
+
+
 @router.post(
     "/uncertain-samples",
     response_model=UncertainSampleResponse,

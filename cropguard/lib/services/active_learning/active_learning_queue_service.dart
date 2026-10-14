@@ -150,6 +150,32 @@ class ActiveLearningQueueService {
     await _updateStatus(id, SampleSyncStatus.synced);
   }
 
+  Future<void> markSampleReviewed(
+    String id, {
+    required String expertLabel,
+    String? expertNotes,
+    DateTime? reviewedAt,
+    String? reviewedBy,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final all = await getAllSamples();
+    final index = all.indexWhere((s) => s.id == id);
+    if (index == -1) return;
+
+    all[index] = all[index].copyWith(
+      status: SampleSyncStatus.reviewed,
+      expertLabel: expertLabel,
+      expertNotes: expertNotes,
+      reviewedAt: reviewedAt,
+      reviewedBy: reviewedBy,
+      syncErrorMessage: null,
+    );
+    await prefs.setString(
+      _queuePrefsKey,
+      jsonEncode(all.map((s) => s.toJson()).toList()),
+    );
+  }
+
   Future<void> markSampleFailed(String id, [String? errorMessage]) async {
     await _updateStatus(id, SampleSyncStatus.failed, errorMessage);
   }
@@ -188,6 +214,19 @@ class ActiveLearningQueueService {
       return await syncService.syncPendingSamples(pending);
     } catch (e) {
       debugPrint('ActiveLearningQueueService syncPendingSamples error: $e');
+      return 0;
+    }
+
+  }
+
+  Future<int> syncReviewStatuses() async {
+    try {
+      final samples = await getAllSamples();
+      if (samples.isEmpty) return 0;
+      final syncService = HttpActiveLearningSyncService(queueService: this);
+      return await syncService.syncReviewStatuses(samples);
+    } catch (e) {
+      debugPrint('ActiveLearningQueueService syncReviewStatuses error: $e');
       return 0;
     }
   }

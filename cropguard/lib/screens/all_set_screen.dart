@@ -1,124 +1,140 @@
 import 'package:flutter/material.dart';
-import '../l10n/app_localizations.dart';
 import '../models/region_model_config.dart';
-import '../core/theme/app_theme.dart';
-import '../core/utils/region_localizer.dart';
 import 'main_navigation_shell.dart';
 
-class AllSetScreen extends StatelessWidget {
-  final RegionModelConfig selectedRegion;
-
-  const AllSetScreen({
-    super.key,
-    required this.selectedRegion,
-  });
+class AllSetScreen extends StatefulWidget {
+  final RegionModelConfig? selectedRegion;
+  const AllSetScreen({super.key, this.selectedRegion});
 
   @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    final localizedRegionName = RegionLocalizer.getDisplayName(
-      context,
-      selectedRegion.regionId,
-      fallback: selectedRegion.displayName,
-    );
+  State<AllSetScreen> createState() => _AllSetScreenState();
+}
 
-    return Scaffold(
-      backgroundColor: AppTheme.darkBg,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(28),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Spacer(),
+class _AllSetScreenState extends State<AllSetScreen>
+    with TickerProviderStateMixin {
+  late AnimationController pulseCtrl;
+  late AnimationController fadeCtrl;
 
-              Container(
-                width: 90,
-                height: 90,
-                decoration: const BoxDecoration(
-                  color: AppTheme.primaryGreen,
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.check_rounded, color: Colors.white, size: 54),
-              ),
+  late Animation<double> pulse;
+  late Animation<double> fade;
 
-              const SizedBox(height: 32),
+  final items = const [
+    'Offline model ready',
+    'Region set',
+    'System configured',
+  ];
 
-              Text(
-                l?.readyForOfflineDetection ?? '✓ Ready for Offline Detection',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: AppTheme.textPrimary,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+  @override
+  void initState() {
+    super.initState();
 
-              const SizedBox(height: 12),
+    fadeCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    )..forward();
 
-              Text(
-                l?.allSetDesc(localizedRegionName) ??
-                    'FP16 local model loaded for $localizedRegionName. CropGuard is completely configured for offline field use.',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  color: AppTheme.textSecondary,
-                  fontSize: 14,
-                  height: 1.5,
-                ),
-              ),
+    pulseCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
 
-              const SizedBox(height: 30),
+    fade = CurvedAnimation(parent: fadeCtrl, curve: Curves.easeOut);
+    pulse = Tween(begin: 0.93, end: 1.0).animate(pulseCtrl);
+  }
 
-              _buildCheckTile(l?.regionalModelInstalled ?? 'Regional FP16 Model Installed'),
-              _buildCheckTile(l?.regionActive(localizedRegionName) ?? '$localizedRegionName Active'),
-              _buildCheckTile(l?.offlineEngineReady ?? 'Offline Inference Engine Ready'),
+  @override
+  void dispose() {
+    fadeCtrl.dispose();
+    pulseCtrl.dispose();
+    super.dispose();
+  }
 
-              const Spacer(),
-
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const MainNavigationShell(),
-                    ),
-                    (route) => false,
-                  );
-                },
-                child: Text(l?.startUsingCropGuard ?? 'Start Using CropGuard'),
-              ),
-
-              const SizedBox(height: 16),
-            ],
-          ),
-        ),
+  Widget checkItem(String text) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1B3A1B),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF4CAF50)),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.check_circle,
+              color: Color(0xFF4CAF50), size: 18),
+          const SizedBox(width: 10),
+          Text(text, style: const TextStyle(color: Colors.white)),
+        ],
       ),
     );
   }
 
-  Widget _buildCheckTile(String label) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: AppTheme.surfaceDark,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppTheme.surfaceBorder),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.check_circle_rounded, color: AppTheme.accentGreen, size: 20),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              label,
-              style: const TextStyle(
-                  color: AppTheme.textPrimary,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500),
-            ),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xFF0F0F0F),
+      body: FadeTransition(
+        opacity: fade,
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            children: [
+              const SizedBox(height: 60),
+
+              AnimatedBuilder(
+                animation: pulse,
+                builder: (_, __) {
+                  return Transform.scale(
+                    scale: pulse.value,
+                    child: const CircleAvatar(
+                      radius: 40,
+                      backgroundColor: Color(0xFF4CAF50),
+                      child: Icon(Icons.check, color: Colors.white),
+                    ),
+                  );
+                },
+              ),
+
+              const SizedBox(height: 30),
+
+              const Text(
+                "You're all set",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              ...items.map(checkItem),
+
+              const Spacer(),
+
+              SizedBox(
+                width: double.infinity,
+                height: 54,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const MainNavigationShell(),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF4CAF50),
+                  ),
+                  child: const Text('Start Scanning'),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

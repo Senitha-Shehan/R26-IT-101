@@ -2,6 +2,7 @@ enum SampleSyncStatus {
   pending,
   synced,
   failed,
+  reviewed,
 }
 
 class ActiveLearningSample {
@@ -15,6 +16,10 @@ class ActiveLearningSample {
   final DateTime timestamp;
   final SampleSyncStatus status;
   final String? syncErrorMessage;
+  final String? expertLabel;
+  final String? expertNotes;
+  final DateTime? reviewedAt;
+  final String? reviewedBy;
 
   const ActiveLearningSample({
     required this.id,
@@ -27,6 +32,10 @@ class ActiveLearningSample {
     required this.timestamp,
     this.status = SampleSyncStatus.pending,
     this.syncErrorMessage,
+    this.expertLabel,
+    this.expertNotes,
+    this.reviewedAt,
+    this.reviewedBy,
   });
 
   ActiveLearningSample copyWith({
@@ -40,6 +49,10 @@ class ActiveLearningSample {
     DateTime? timestamp,
     SampleSyncStatus? status,
     String? syncErrorMessage,
+    String? expertLabel,
+    String? expertNotes,
+    DateTime? reviewedAt,
+    String? reviewedBy,
   }) {
     return ActiveLearningSample(
       id: id ?? this.id,
@@ -52,6 +65,10 @@ class ActiveLearningSample {
       timestamp: timestamp ?? this.timestamp,
       status: status ?? this.status,
       syncErrorMessage: syncErrorMessage ?? this.syncErrorMessage,
+      expertLabel: expertLabel ?? this.expertLabel,
+      expertNotes: expertNotes ?? this.expertNotes,
+      reviewedAt: reviewedAt ?? this.reviewedAt,
+      reviewedBy: reviewedBy ?? this.reviewedBy,
     );
   }
 
@@ -67,6 +84,10 @@ class ActiveLearningSample {
       'timestamp': timestamp.toIso8601String(),
       'status': status.name,
       'syncErrorMessage': syncErrorMessage,
+      'expertLabel': expertLabel,
+      'expertNotes': expertNotes,
+      'reviewedAt': reviewedAt?.toIso8601String(),
+      'reviewedBy': reviewedBy,
     };
   }
 
@@ -85,6 +106,12 @@ class ActiveLearningSample {
         orElse: () => SampleSyncStatus.pending,
       ),
       syncErrorMessage: json['syncErrorMessage'] as String?,
+      expertLabel: json['expertLabel'] as String?,
+      expertNotes: json['expertNotes'] as String?,
+      reviewedAt: json['reviewedAt'] == null
+          ? null
+          : DateTime.parse(json['reviewedAt'] as String),
+      reviewedBy: json['reviewedBy'] as String?,
     );
   }
 }

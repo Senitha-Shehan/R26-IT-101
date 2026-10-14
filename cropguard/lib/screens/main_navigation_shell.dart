@@ -5,26 +5,47 @@ import 'home_screen.dart';
 import 'detection/detection_screen.dart';
 import 'review/active_learning_review_screen.dart';
 import 'notification_screen.dart';
+import '../services/active_learning/active_learning_queue_service.dart';
 
 class MainNavigationShell extends StatefulWidget {
   final int initialIndex;
 
-  const MainNavigationShell({
-    super.key,
-    this.initialIndex = 0,
-  });
+  const MainNavigationShell({super.key, this.initialIndex = 0});
 
   @override
   State<MainNavigationShell> createState() => _MainNavigationShellState();
 }
 
-class _MainNavigationShellState extends State<MainNavigationShell> {
+class _MainNavigationShellState extends State<MainNavigationShell>
+    with WidgetsBindingObserver {
   late int _currentIndex;
+  final ActiveLearningQueueService _queueService = ActiveLearningQueueService();
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _currentIndex = widget.initialIndex;
+    _syncReviewStatuses();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _syncReviewStatuses();
+    }
+  }
+
+  Future<void> _syncReviewStatuses() async {
+    await _queueService.syncPendingSamples();
+    await _queueService.syncReviewStatuses();
+    if (mounted) setState(() {});
   }
 
   void _onTabTapped(int index) {
@@ -46,10 +67,7 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
 
     return Scaffold(
       backgroundColor: AppTheme.darkBg,
-      body: IndexedStack(
-        index: _currentIndex,
-        children: pages,
-      ),
+      body: IndexedStack(index: _currentIndex, children: pages),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onTabTapped,
@@ -62,22 +80,34 @@ class _MainNavigationShellState extends State<MainNavigationShell> {
         items: [
           BottomNavigationBarItem(
             icon: const Icon(Icons.home_rounded),
-            activeIcon: const Icon(Icons.home_rounded, color: AppTheme.accentGreen),
+            activeIcon: const Icon(
+              Icons.home_rounded,
+              color: AppTheme.accentGreen,
+            ),
             label: l?.navHome ?? 'Home',
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.camera_alt_outlined),
-            activeIcon: const Icon(Icons.camera_alt_rounded, color: AppTheme.accentGreen),
+            activeIcon: const Icon(
+              Icons.camera_alt_rounded,
+              color: AppTheme.accentGreen,
+            ),
             label: l?.navScan ?? 'Scan',
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.history_rounded),
-            activeIcon: const Icon(Icons.history_rounded, color: AppTheme.accentGreen),
+            activeIcon: const Icon(
+              Icons.history_rounded,
+              color: AppTheme.accentGreen,
+            ),
             label: l?.navHistory ?? 'History',
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.notifications_outlined),
-            activeIcon: const Icon(Icons.notifications_rounded, color: AppTheme.accentGreen),
+            activeIcon: const Icon(
+              Icons.notifications_rounded,
+              color: AppTheme.accentGreen,
+            ),
             label: l?.navAlerts ?? 'Alerts',
           ),
         ],
