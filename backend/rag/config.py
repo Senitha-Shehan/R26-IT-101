@@ -57,6 +57,9 @@ GENERATION_MODE = os.getenv("RAG_GENERATION_MODE", "auto").lower()
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1")
 OLLAMA_TIMEOUT_SECONDS = int(os.getenv("OLLAMA_TIMEOUT_SECONDS", "120"))
+OLLAMA_AVAILABILITY_TIMEOUT_SECONDS = float(
+    os.getenv("OLLAMA_AVAILABILITY_TIMEOUT_SECONDS", "3")
+)
 
 # Extractive mode: max sentences kept per section.
 EXTRACTIVE_MAX_PER_SECTION = int(os.getenv("RAG_EXTRACTIVE_MAX_PER_SECTION", "6"))

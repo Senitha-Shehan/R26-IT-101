@@ -27,7 +27,6 @@ class TreatmentService {
     String? crop,
     String language = 'en',
   }) async {
-    final uri = Uri.parse(ApiConfig.treatmentEndpoint);
     final body = jsonEncode({
       'disease_name': diseaseName,
       'crop': ?crop,
@@ -35,7 +34,9 @@ class TreatmentService {
       'language': language,
     });
 
-    http.Response response;
+    http.Response? response;
+    Object? lastError;
+    final uri = Uri.parse(ApiConfig.treatmentEndpoint);
     try {
       response = await _client
           .post(
@@ -43,11 +44,16 @@ class TreatmentService {
             headers: const {'Content-Type': 'application/json'},
             body: body,
           )
-          .timeout(const Duration(seconds: 130));
+          .timeout(const Duration(seconds: 45));
     } catch (e) {
-      debugPrint('TreatmentService network error: $e');
+      lastError = e;
+      debugPrint('TreatmentService request failed for $uri: $e');
+    }
+
+    if (response == null) {
+      debugPrint('TreatmentService network error: $lastError');
       throw const TreatmentServiceException(
-        'Could not reach the treatment service. Check your network connection and try again.',
+        'Could not reach the treatment service. Check that the backend is running and try again.',
         isNetwork: true,
       );
     }
@@ -70,7 +76,9 @@ class TreatmentService {
       );
     }
 
-    debugPrint('TreatmentService HTTP ${response.statusCode}: ${response.body}');
+    debugPrint(
+      'TreatmentService HTTP ${response.statusCode}: ${response.body}',
+    );
     throw TreatmentServiceException(
       'Treatment request failed (HTTP ${response.statusCode}).',
     );

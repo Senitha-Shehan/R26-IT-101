@@ -28,7 +28,8 @@ flutter pub get
 flutter analyze
 
 # 4. Launch app on connected device or emulator
-flutter run
+# For this physical Android device, use the development PC's Wi-Fi address:
+flutter run --dart-define=CROPGUARD_API_BASE_URL=http://192.168.8.121:8000
 ```
 
 ---
@@ -72,3 +73,14 @@ flutter clean
 flutter pub get
 flutter run
 ```
+
+The FastAPI server must be running on the development PC:
+
+```powershell
+cd backend
+.\.venv\Scripts\python.exe -m uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+For a different physical device network, replace `192.168.8.121` with the
+development PC's current Wi-Fi IPv4 address. Android emulator builds should use
+`http://10.0.2.2:8000` instead.
