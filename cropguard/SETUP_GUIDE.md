@@ -1,4 +1,4 @@
-# CropGuard Mobile App - Setup & Dependency Guide
+;# CropGuard Mobile App - Setup & Dependency Guide
 
 This guide provides setup instructions for team members pulling this branch.
 

@@ -17,7 +17,7 @@ class ActiveLearningReviewScreen extends StatefulWidget {
 }
 
 class _ActiveLearningReviewScreenState
-    extends State<ActiveLearningReviewScreen> {
+    extends State<ActiveLearningReviewScreen> with WidgetsBindingObserver {
   final ActiveLearningQueueService _queueService = ActiveLearningQueueService();
   List<ActiveLearningSample> _samples = [];
   bool _isLoading = true;
@@ -26,7 +26,21 @@ class _ActiveLearningReviewScreenState
   @override
   void initState() {
     super.initState();
-    _loadSamples();
+    WidgetsBinding.instance.addObserver(this);
+    _refreshFromBackend();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _refreshFromBackend();
+    }
   }
 
   Future<void> _loadSamples() async {
@@ -39,9 +53,16 @@ class _ActiveLearningReviewScreenState
     });
   }
 
+  Future<void> _refreshFromBackend() async {
+    await _queueService.syncPendingSamples();
+    await _queueService.syncReviewStatuses();
+    await _loadSamples();
+  }
+
   Future<void> _syncSamples() async {
     setState(() => _isLoading = true);
     final synced = await _queueService.syncPendingSamples();
+    final reviewed = await _queueService.syncReviewStatuses();
     await _loadSamples();
     if (!mounted) return;
     final l = AppLocalizations.of(context);
@@ -49,7 +70,9 @@ class _ActiveLearningReviewScreenState
       SnackBar(
         content: Text(synced > 0
             ? (l?.syncedSamples(synced) ?? 'Synced $synced sample(s)')
-            : (l?.allSamplesUpToDate ?? 'All samples up to date')),
+            : reviewed > 0
+                ? 'Updated $reviewed reviewed sample(s)'
+                : (l?.allSamplesUpToDate ?? 'All samples up to date')),
         backgroundColor: AppTheme.accentGreen,
       ),
     );
@@ -203,11 +226,13 @@ class _ActiveLearningReviewScreenState
   List<ActiveLearningSample> get _filteredSamples {
     if (_selectedFilterKey == 'Confirmed') {
       return _samples
-          .where((s) => s.status == SampleSyncStatus.synced)
+          .where((s) =>
+              s.status == SampleSyncStatus.synced ||
+              s.status == SampleSyncStatus.reviewed)
           .toList();
     } else if (_selectedFilterKey == 'Needs Review') {
       return _samples
-          .where((s) => s.status == SampleSyncStatus.pending)
+          .where((s) => s.status != SampleSyncStatus.reviewed)
           .toList();
     }
     return _samples;
@@ -310,7 +335,8 @@ class _ActiveLearningReviewScreenState
                             final sample = filtered[index];
                             final confPercent =
                                 (sample.confidence * 100).toStringAsFixed(1);
-                            final isUncertain = sample.confidence < 0.80;
+                            final isReviewed =
+                                sample.status == SampleSyncStatus.reviewed;
                             final localizedDisease = DiseaseLocalizer
                                 .getDisplayName(context, sample.predictedDisease);
                             final localizedRegion =
@@ -326,7 +352,7 @@ class _ActiveLearningReviewScreenState
                                 color: AppTheme.surfaceDark,
                                 borderRadius: BorderRadius.circular(14),
                                 border: Border.all(
-                                  color: isUncertain
+                                  color: !isReviewed
                                       ? AppTheme.statusWarning
                                           .withValues(alpha: 0.5)
                                       : AppTheme.surfaceBorder,
@@ -362,18 +388,34 @@ class _ActiveLearningReviewScreenState
                                 ),
                                 subtitle: Padding(
                                   padding: const EdgeInsets.only(top: 4),
-                                  child: Text(
-                                    '$localizedRegion • ${l?.confLabel(confPercent) ?? 'Conf: $confPercent%'}',
-                                    style: const TextStyle(
-                                        color: AppTheme.textSecondary,
-                                        fontSize: 12),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '$localizedRegion • ${l?.confLabel(confPercent) ?? 'Conf: $confPercent%'}',
+                                        style: const TextStyle(
+                                            color: AppTheme.textSecondary,
+                                            fontSize: 12),
+                                      ),
+                                      if (sample.expertLabel != null) ...[
+                                        const SizedBox(height: 3),
+                                        Text(
+                                          'Expert: ${DiseaseLocalizer.getDisplayName(context, sample.expertLabel!)}',
+                                          style: const TextStyle(
+                                            color: AppTheme.accentGreen,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ],
                                   ),
                                 ),
                                 trailing: Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8, vertical: 4),
                                   decoration: BoxDecoration(
-                                    color: isUncertain
+                                    color: !isReviewed
                                         ? AppTheme.statusWarning
                                             .withValues(alpha: 0.15)
                                         : AppTheme.accentGreen
@@ -381,11 +423,11 @@ class _ActiveLearningReviewScreenState
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(
-                                    isUncertain
+                                    !isReviewed
                                         ? (l?.needsReview ?? 'Needs Review')
                                         : (l?.confirmed ?? 'Confirmed'),
                                     style: TextStyle(
-                                      color: isUncertain
+                                      color: !isReviewed
                                           ? AppTheme.statusWarning
                                           : AppTheme.accentGreen,
                                       fontSize: 11,

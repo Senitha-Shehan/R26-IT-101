@@ -113,4 +113,58 @@ class HttpActiveLearningSyncService implements ActiveLearningSyncService {
 
     return syncedCount;
   }
+
+  @override
+  Future<int> syncReviewStatuses(
+      List<ActiveLearningSample> samples) async {
+    if (!await checkConnection()) return 0;
+
+    int reviewedCount = 0;
+    for (final sample in samples) {
+      if (sample.status == SampleSyncStatus.reviewed) continue;
+
+      try {
+        final uri = Uri.parse(
+          '${ApiConfig.baseUrl}/api/uncertain-samples/${Uri.encodeComponent(sample.id)}/review-status',
+        );
+        final response =
+            await http.get(uri).timeout(const Duration(seconds: 10));
+
+        if (response.statusCode == 404) continue;
+        if (response.statusCode != 200) {
+          debugPrint(
+            'HttpActiveLearningSyncService review status failed for ${sample.id}: '
+            'HTTP ${response.statusCode}: ${response.body}',
+          );
+          continue;
+        }
+
+        final body = jsonDecode(response.body);
+        if (body is! Map || body['status'] != 'reviewed') continue;
+        final expertLabel = body['expert_label'];
+        if (expertLabel is! String || expertLabel.isEmpty) continue;
+
+        DateTime? reviewedAt;
+        final reviewedAtValue = body['reviewed_at'];
+        if (reviewedAtValue is String && reviewedAtValue.isNotEmpty) {
+          reviewedAt = DateTime.tryParse(reviewedAtValue);
+        }
+
+        await _queueService.markSampleReviewed(
+          sample.id,
+          expertLabel: expertLabel,
+          expertNotes: body['expert_notes'] as String?,
+          reviewedAt: reviewedAt,
+          reviewedBy: body['reviewed_by'] as String?,
+        );
+        reviewedCount++;
+      } catch (e) {
+        debugPrint(
+          'HttpActiveLearningSyncService review status exception for '
+          '${sample.id}: $e',
+        );
+      }
+    }
+    return reviewedCount;
+  }
 }

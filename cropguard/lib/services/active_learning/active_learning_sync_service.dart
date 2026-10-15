@@ -7,6 +7,9 @@ abstract class ActiveLearningSyncService {
   /// Returns count of successfully uploaded samples.
   Future<int> syncPendingSamples(List<ActiveLearningSample> pendingSamples);
 
+  /// Refreshes expert review status for locally stored samples.
+  Future<int> syncReviewStatuses(List<ActiveLearningSample> samples);
+
   /// Checks if backend server is reachable.
   Future<bool> checkConnection();
 }
@@ -19,6 +22,11 @@ class OfflineSyncServicePlaceholder implements ActiveLearningSyncService {
   @override
   Future<int> syncPendingSamples(List<ActiveLearningSample> pendingSamples) async {
     // Offline mode: No remote synchronization performed in Phase 4.
+    return 0;
+  }
+
+  @override
+  Future<int> syncReviewStatuses(List<ActiveLearningSample> samples) async {
     return 0;
   }
 
