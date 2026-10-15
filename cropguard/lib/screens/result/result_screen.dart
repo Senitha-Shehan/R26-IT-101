@@ -24,12 +24,16 @@ class _ResultScreenState extends State<ResultScreen> {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final confidencePercent = (widget.result.confidence * 100).toStringAsFixed(1);
+    final confidencePercent = (widget.result.confidence * 100).toStringAsFixed(
+      1,
+    );
     final isHighConfidence = !widget.result.isUncertain;
 
     // Localized display name (backend still uses original English class name)
-    final localizedDiseaseName =
-        DiseaseLocalizer.getDisplayName(context, widget.result.diseaseName);
+    final localizedDiseaseName = DiseaseLocalizer.getDisplayName(
+      context,
+      widget.result.diseaseName,
+    );
     final localizedRegion = RegionLocalizer.getDisplayName(
       context,
       widget.result.regionId,
@@ -65,12 +69,17 @@ class _ResultScreenState extends State<ResultScreen> {
                         child: Image.file(
                           File(widget.result.imagePath),
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Container(
-                            color: AppTheme.surfaceDark,
-                            child: const Center(
-                              child: Icon(Icons.eco_rounded, color: AppTheme.accentGreen, size: 54),
-                            ),
-                          ),
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
+                                color: AppTheme.surfaceDark,
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.eco_rounded,
+                                    color: AppTheme.accentGreen,
+                                    size: 54,
+                                  ),
+                                ),
+                              ),
                         ),
                       ),
                     ),
@@ -80,7 +89,10 @@ class _ResultScreenState extends State<ResultScreen> {
                     // Confidence Banner
                     if (isHighConfidence)
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 10,
+                        ),
                         decoration: BoxDecoration(
                           color: AppTheme.accentGreen.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(12),
@@ -88,10 +100,15 @@ class _ResultScreenState extends State<ResultScreen> {
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.check_circle_rounded, color: AppTheme.accentGreen, size: 20),
+                            const Icon(
+                              Icons.check_circle_rounded,
+                              color: AppTheme.accentGreen,
+                              size: 20,
+                            ),
                             const SizedBox(width: 10),
                             Text(
-                              l?.highConfidencePrediction ?? '✓ High Confidence Prediction',
+                              l?.highConfidencePrediction ??
+                                  '✓ High Confidence Prediction',
                               style: const TextStyle(
                                 color: AppTheme.accentGreen,
                                 fontWeight: FontWeight.bold,
@@ -114,12 +131,16 @@ class _ResultScreenState extends State<ResultScreen> {
                           children: [
                             Row(
                               children: [
-                                const Icon(Icons.warning_amber_rounded,
-                                    color: AppTheme.statusWarning, size: 22),
+                                const Icon(
+                                  Icons.warning_amber_rounded,
+                                  color: AppTheme.statusWarning,
+                                  size: 22,
+                                ),
                                 const SizedBox(width: 8),
                                 Expanded(
                                   child: Text(
-                                    l?.uncertainPrediction ?? 'Uncertain Prediction (< 80%)',
+                                    l?.uncertainPrediction ??
+                                        'Uncertain Prediction (< 80%)',
                                     style: const TextStyle(
                                       color: AppTheme.statusWarning,
                                       fontWeight: FontWeight.bold,
@@ -128,17 +149,24 @@ class _ResultScreenState extends State<ResultScreen> {
                                   ),
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
                                   decoration: BoxDecoration(
-                                    color: AppTheme.statusWarning.withValues(alpha: 0.2),
+                                    color: AppTheme.statusWarning.withValues(
+                                      alpha: 0.2,
+                                    ),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   child: Text(
-                                    l?.savedForExpertReview ?? '✓ Saved for Expert Review',
+                                    l?.savedForExpertReview ??
+                                        '✓ Saved for Expert Review',
                                     style: const TextStyle(
-                                        color: AppTheme.statusWarning,
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.bold),
+                                      color: AppTheme.statusWarning,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -148,7 +176,10 @@ class _ResultScreenState extends State<ResultScreen> {
                               l?.uncertainDesc ??
                                   'This prediction is uncertain and has been automatically saved for expert review.',
                               style: const TextStyle(
-                                  color: AppTheme.textPrimary, fontSize: 13, height: 1.4),
+                                color: AppTheme.textPrimary,
+                                fontSize: 13,
+                                height: 1.4,
+                              ),
                             ),
                           ],
                         ),
@@ -176,15 +207,20 @@ class _ResultScreenState extends State<ResultScreen> {
                               const SizedBox(height: 4),
                               Row(
                                 children: [
-                                  const Icon(Icons.location_on,
-                                      color: AppTheme.textSecondary, size: 14),
+                                  const Icon(
+                                    Icons.location_on,
+                                    color: AppTheme.textSecondary,
+                                    size: 14,
+                                  ),
                                   const SizedBox(width: 4),
                                   Flexible(
                                     child: Text(
                                       l?.regionLabel(localizedRegion) ??
                                           'Region: $localizedRegion',
                                       style: const TextStyle(
-                                          color: AppTheme.textSecondary, fontSize: 13),
+                                        color: AppTheme.textSecondary,
+                                        fontSize: 13,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -193,11 +229,16 @@ class _ResultScreenState extends State<ResultScreen> {
                           ),
                         ),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 8,
+                          ),
                           decoration: BoxDecoration(
                             color: isHighConfidence
                                 ? AppTheme.accentGreen.withValues(alpha: 0.15)
-                                : AppTheme.statusWarning.withValues(alpha: 0.15),
+                                : AppTheme.statusWarning.withValues(
+                                    alpha: 0.15,
+                                  ),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
                               color: isHighConfidence
@@ -225,7 +266,8 @@ class _ResultScreenState extends State<ResultScreen> {
 
                     // Probabilities Breakdown
                     Text(
-                      l?.modelClassProbabilities ?? 'Model Class Probabilities (Local FP16)',
+                      l?.modelClassProbabilities ??
+                          'Possible results and confidence',
                       style: const TextStyle(
                         color: AppTheme.textPrimary,
                         fontSize: 15,
@@ -234,12 +276,17 @@ class _ResultScreenState extends State<ResultScreen> {
                     ),
                     const SizedBox(height: 12),
 
-                    ...List.generate(widget.result.allProbabilities.length, (index) {
-                      final englishLabel = index < RegionalModelsConfig.globalClassLabels.length
+                    ...List.generate(widget.result.allProbabilities.length, (
+                      index,
+                    ) {
+                      final englishLabel =
+                          index < RegionalModelsConfig.globalClassLabels.length
                           ? RegionalModelsConfig.globalClassLabels[index]
                           : 'Class $index';
-                      final localizedLabel =
-                          DiseaseLocalizer.getDisplayName(context, englishLabel);
+                      final localizedLabel = DiseaseLocalizer.getDisplayName(
+                        context,
+                        englishLabel,
+                      );
                       final prob = widget.result.allProbabilities[index];
                       final probPercent = (prob * 100).toStringAsFixed(1);
                       final isTop = englishLabel == widget.result.diseaseName;
@@ -253,9 +300,12 @@ class _ResultScreenState extends State<ResultScreen> {
                               child: Text(
                                 localizedLabel,
                                 style: TextStyle(
-                                  color: isTop ? AppTheme.textPrimary : AppTheme.textSecondary,
-                                  fontWeight:
-                                      isTop ? FontWeight.bold : FontWeight.normal,
+                                  color: isTop
+                                      ? AppTheme.textPrimary
+                                      : AppTheme.textSecondary,
+                                  fontWeight: isTop
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
                                   fontSize: 13,
                                 ),
                                 overflow: TextOverflow.ellipsis,
@@ -267,8 +317,8 @@ class _ResultScreenState extends State<ResultScreen> {
                                 backgroundColor: AppTheme.surfaceDark,
                                 color: isTop
                                     ? (isHighConfidence
-                                        ? AppTheme.accentGreen
-                                        : AppTheme.statusWarning)
+                                          ? AppTheme.accentGreen
+                                          : AppTheme.statusWarning)
                                     : Colors.grey.shade700,
                                 minHeight: 8,
                                 borderRadius: BorderRadius.circular(4),
@@ -280,10 +330,13 @@ class _ResultScreenState extends State<ResultScreen> {
                               child: Text(
                                 '$probPercent%',
                                 style: TextStyle(
-                                  color: isTop ? AppTheme.textPrimary : AppTheme.textSecondary,
+                                  color: isTop
+                                      ? AppTheme.textPrimary
+                                      : AppTheme.textSecondary,
                                   fontSize: 12,
-                                  fontWeight:
-                                      isTop ? FontWeight.bold : FontWeight.normal,
+                                  fontWeight: isTop
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
                                 ),
                                 textAlign: TextAlign.right,
                               ),
@@ -307,18 +360,22 @@ class _ResultScreenState extends State<ResultScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            l?.helpImproveDiagnosis ?? 'Help Improve This Diagnosis',
+                            l?.helpImproveDiagnosis ??
+                                'Help Improve This Diagnosis',
                             style: const TextStyle(
-                                color: AppTheme.textPrimary,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14),
+                              color: AppTheme.textPrimary,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
                           ),
                           const SizedBox(height: 6),
                           Text(
                             l?.isDiagnosisAccurate ??
                                 'Is this disease prediction accurate for your crop?',
                             style: const TextStyle(
-                                color: AppTheme.textSecondary, fontSize: 12),
+                              color: AppTheme.textSecondary,
+                              fontSize: 12,
+                            ),
                           ),
                           const SizedBox(height: 12),
                           Row(
@@ -329,8 +386,11 @@ class _ResultScreenState extends State<ResultScreen> {
                                     setState(() => _userConfirmed = true);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                          content: Text(l?.thankyouConfirmed ??
-                                              '✓ Thank you! Diagnosis confirmed.')),
+                                        content: Text(
+                                          l?.thankyouConfirmed ??
+                                              '✓ Thank you! Diagnosis confirmed.',
+                                        ),
+                                      ),
                                     );
                                   },
                                   icon: Icon(
@@ -340,9 +400,11 @@ class _ResultScreenState extends State<ResultScreen> {
                                     color: AppTheme.accentGreen,
                                     size: 18,
                                   ),
-                                  label: Text(_userConfirmed
-                                      ? (l?.confirmed ?? 'Confirmed')
-                                      : (l?.looksRight ?? 'Looks Right')),
+                                  label: Text(
+                                    _userConfirmed
+                                        ? (l?.confirmed ?? 'Confirmed')
+                                        : (l?.looksRight ?? 'Looks Right'),
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: 10),
@@ -352,13 +414,19 @@ class _ResultScreenState extends State<ResultScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (_) =>
-                                              const ActiveLearningReviewScreen()),
+                                        builder: (_) =>
+                                            const ActiveLearningReviewScreen(),
+                                      ),
                                     );
                                   },
-                                  icon: const Icon(Icons.edit_note_rounded,
-                                      color: AppTheme.statusWarning, size: 18),
-                                  label: Text(l?.reviewCorrect ?? 'Review / Correct'),
+                                  icon: const Icon(
+                                    Icons.edit_note_rounded,
+                                    color: AppTheme.statusWarning,
+                                    size: 18,
+                                  ),
+                                  label: Text(
+                                    l?.reviewCorrect ?? 'Review / Correct',
+                                  ),
                                 ),
                               ),
                             ],
@@ -390,7 +458,9 @@ class _ResultScreenState extends State<ResultScreen> {
                       );
                     },
                     icon: const Icon(Icons.menu_book_rounded),
-                    label: Text(l?.viewTreatmentGuide ?? 'View Treatment Guide'),
+                    label: Text(
+                      l?.viewTreatmentGuide ?? 'View Treatment Guide',
+                    ),
                   ),
                   const SizedBox(height: 10),
                   OutlinedButton(

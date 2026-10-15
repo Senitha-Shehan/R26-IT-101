@@ -62,7 +62,7 @@ class AllSetScreen extends StatelessWidget {
 
               Text(
                 l?.allSetDesc(localizedRegionName) ??
-                    'FP16 local model loaded for $localizedRegionName. CropGuard is completely configured for offline field use.',
+                    'CropGuard is ready to help you care for crops in $localizedRegionName, even without internet.',
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   color: AppTheme.textSecondary,
@@ -74,14 +74,14 @@ class AllSetScreen extends StatelessWidget {
               const SizedBox(height: 30),
 
               _buildCheckTile(
-                l?.regionalModelInstalled ?? 'Regional FP16 Model Installed',
+                l?.regionalModelInstalled ?? 'Regional crop guide ready',
               ),
               _buildCheckTile(
                 l?.regionActive(localizedRegionName) ??
                     '$localizedRegionName Active',
               ),
               _buildCheckTile(
-                l?.offlineEngineReady ?? 'Offline Inference Engine Ready',
+                l?.offlineEngineReady ?? 'Works without internet',
               ),
 
               const Spacer(),

@@ -50,7 +50,10 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
     );
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(l?.activeAIModelSet(localizedRegion) ?? 'Active AI Model set to $localizedRegion'),
+        content: Text(
+          l?.activeAIModelSet(localizedRegion) ??
+              'Crop guide set to $localizedRegion',
+        ),
         backgroundColor: AppTheme.accentGreen,
       ),
     );
@@ -84,7 +87,9 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
         elevation: 0,
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: AppTheme.accentGreen))
+          ? const Center(
+              child: CircularProgressIndicator(color: AppTheme.accentGreen),
+            )
           : SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -103,7 +108,11 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                         const CircleAvatar(
                           radius: 28,
                           backgroundColor: AppTheme.primaryGreen,
-                          child: Icon(Icons.person, color: Colors.white, size: 30),
+                          child: Icon(
+                            Icons.person,
+                            color: Colors.white,
+                            size: 30,
+                          ),
                         ),
                         const SizedBox(width: 14),
                         Expanded(
@@ -121,7 +130,11 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                               const SizedBox(height: 4),
                               Row(
                                 children: [
-                                  const Icon(Icons.location_on, color: AppTheme.accentGreen, size: 14),
+                                  const Icon(
+                                    Icons.location_on,
+                                    color: AppTheme.accentGreen,
+                                    size: 14,
+                                  ),
                                   const SizedBox(width: 4),
                                   Expanded(
                                     child: Text(
@@ -163,16 +176,30 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                       border: Border.all(color: AppTheme.surfaceBorder),
                     ),
                     child: ListTile(
-                      leading: const Icon(Icons.language_rounded, color: AppTheme.accentGreen),
+                      leading: const Icon(
+                        Icons.language_rounded,
+                        color: AppTheme.accentGreen,
+                      ),
                       title: Text(
                         l?.language ?? 'Language',
-                        style: const TextStyle(color: AppTheme.textPrimary, fontSize: 15, fontWeight: FontWeight.w600),
+                        style: const TextStyle(
+                          color: AppTheme.textPrimary,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       subtitle: Text(
                         _getLanguageDisplayName(_currentLocaleCode, l),
-                        style: const TextStyle(color: AppTheme.accentGreen, fontSize: 13, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          color: AppTheme.accentGreen,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      trailing: const Icon(Icons.chevron_right_rounded, color: AppTheme.textSecondary),
+                      trailing: const Icon(
+                        Icons.chevron_right_rounded,
+                        color: AppTheme.textSecondary,
+                      ),
                       onTap: () async {
                         await Navigator.push(
                           context,
@@ -187,9 +214,9 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
 
                   const SizedBox(height: 24),
 
-                  // AI & Offline Models Section
+                  // Crop guidance section
                   Text(
-                    l?.sectionAiEngine ?? 'AI & OFFLINE ENGINE',
+                    l?.sectionAiEngine ?? 'CROP GUIDANCE',
                     style: const TextStyle(
                       color: AppTheme.textSecondary,
                       fontSize: 12,
@@ -210,7 +237,8 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          l?.activeAgriculturalRegion ?? 'Active Agricultural Region',
+                          l?.activeAgriculturalRegion ??
+                              'Active Agricultural Region',
                           style: const TextStyle(
                             color: AppTheme.textPrimary,
                             fontSize: 15,
@@ -220,8 +248,11 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                         const SizedBox(height: 4),
                         Text(
                           l?.activeRegionDesc ??
-                              'Loads regional FP16 TFLite model tuned for local disease factors.',
-                          style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+                              'Uses guidance suited to diseases found in your selected area.',
+                          style: const TextStyle(
+                            color: AppTheme.textSecondary,
+                            fontSize: 12,
+                          ),
                         ),
                         const SizedBox(height: 12),
                         DropdownButtonHideUnderline(
@@ -229,13 +260,19 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                             value: _selectedRegion,
                             isExpanded: true,
                             dropdownColor: const Color(0xFF242B24),
-                            icon: const Icon(Icons.keyboard_arrow_down, color: AppTheme.accentGreen),
-                            items: RegionalModelsConfig.allRegions.map((region) {
-                              final localizedName = RegionLocalizer.getDisplayName(
-                                context,
-                                region.regionId,
-                                fallback: region.displayName,
-                              );
+                            icon: const Icon(
+                              Icons.keyboard_arrow_down,
+                              color: AppTheme.accentGreen,
+                            ),
+                            items: RegionalModelsConfig.allRegions.map((
+                              region,
+                            ) {
+                              final localizedName =
+                                  RegionLocalizer.getDisplayName(
+                                    context,
+                                    region.regionId,
+                                    fallback: region.displayName,
+                                  );
                               return DropdownMenuItem<RegionModelConfig>(
                                 value: region,
                                 child: Text(
@@ -254,20 +291,35 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                             },
                           ),
                         ),
-                        const Divider(color: AppTheme.surfaceBorder, height: 24),
+                        const Divider(
+                          color: AppTheme.surfaceBorder,
+                          height: 24,
+                        ),
                         Row(
                           children: [
-                            const Icon(Icons.check_circle_rounded, color: AppTheme.accentGreen, size: 20),
+                            const Icon(
+                              Icons.check_circle_rounded,
+                              color: AppTheme.accentGreen,
+                              size: 20,
+                            ),
                             const SizedBox(width: 10),
                             Expanded(
                               child: Text(
-                                l?.nineRegionalModelsInstalled ?? '9 Regional FP16 Models Installed',
-                                style: const TextStyle(color: AppTheme.textPrimary, fontSize: 14),
+                                l?.nineRegionalModelsInstalled ??
+                                    'Regional crop guides ready',
+                                style: const TextStyle(
+                                  color: AppTheme.textPrimary,
+                                  fontSize: 14,
+                                ),
                               ),
                             ),
                             Text(
                               l?.ready ?? 'Ready',
-                              style: const TextStyle(color: AppTheme.accentGreen, fontWeight: FontWeight.bold, fontSize: 13),
+                              style: const TextStyle(
+                                color: AppTheme.accentGreen,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
                             ),
                           ],
                         ),
@@ -298,26 +350,45 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                     child: Column(
                       children: [
                         ListTile(
-                          leading: const Icon(Icons.info_outline, color: AppTheme.accentGreen),
+                          leading: const Icon(
+                            Icons.info_outline,
+                            color: AppTheme.accentGreen,
+                          ),
                           title: Text(
                             l?.aboutCropGuard ?? 'About CropGuard',
-                            style: const TextStyle(color: AppTheme.textPrimary, fontSize: 15),
+                            style: const TextStyle(
+                              color: AppTheme.textPrimary,
+                              fontSize: 15,
+                            ),
                           ),
                           subtitle: Text(
-                            l?.versionInfo ?? 'AI Paddy Disease Detection v1.0.0',
-                            style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+                            l?.versionInfo ?? 'Paddy leaf health guide v1.0.0',
+                            style: const TextStyle(
+                              color: AppTheme.textSecondary,
+                              fontSize: 12,
+                            ),
                           ),
                         ),
                         const Divider(color: AppTheme.surfaceBorder, height: 1),
                         ListTile(
-                          leading: const Icon(Icons.help_outline, color: AppTheme.accentGreen),
+                          leading: const Icon(
+                            Icons.help_outline,
+                            color: AppTheme.accentGreen,
+                          ),
                           title: Text(
                             l?.fieldScanningGuide ?? 'Field Scanning Guide',
-                            style: const TextStyle(color: AppTheme.textPrimary, fontSize: 15),
+                            style: const TextStyle(
+                              color: AppTheme.textPrimary,
+                              fontSize: 15,
+                            ),
                           ),
                           subtitle: Text(
-                            l?.fieldScanningGuideSub ?? 'Tips for best camera lighting and leaf positioning',
-                            style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+                            l?.fieldScanningGuideSub ??
+                                'Tips for best camera lighting and leaf positioning',
+                            style: const TextStyle(
+                              color: AppTheme.textSecondary,
+                              fontSize: 12,
+                            ),
                           ),
                           onTap: () {
                             showDialog(
@@ -326,30 +397,44 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                                 backgroundColor: AppTheme.surfaceDark,
                                 title: Text(
                                   l?.fieldScanningTips ?? 'Field Scanning Tips',
-                                  style: const TextStyle(color: AppTheme.textPrimary),
+                                  style: const TextStyle(
+                                    color: AppTheme.textPrimary,
+                                  ),
                                 ),
                                 content: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      l?.tip1 ?? '• Position leaf directly inside the scan frame.',
-                                      style: const TextStyle(color: AppTheme.textSecondary),
+                                      l?.tip1 ??
+                                          '• Position leaf directly inside the scan frame.',
+                                      style: const TextStyle(
+                                        color: AppTheme.textSecondary,
+                                      ),
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      l?.tip2 ?? '• Ensure adequate natural sunlight daylight.',
-                                      style: const TextStyle(color: AppTheme.textSecondary),
+                                      l?.tip2 ??
+                                          '• Ensure adequate natural sunlight daylight.',
+                                      style: const TextStyle(
+                                        color: AppTheme.textSecondary,
+                                      ),
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      l?.tip3 ?? '• Avoid severe shadows or extremely blurry photos.',
-                                      style: const TextStyle(color: AppTheme.textSecondary),
+                                      l?.tip3 ??
+                                          '• Avoid severe shadows or extremely blurry photos.',
+                                      style: const TextStyle(
+                                        color: AppTheme.textSecondary,
+                                      ),
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      l?.tip4 ?? '• Predictions under 80% confidence are automatically saved for expert review.',
-                                      style: const TextStyle(color: AppTheme.textSecondary),
+                                      l?.tip4 ??
+                                          '• Predictions under 80% confidence are automatically saved for expert review.',
+                                      style: const TextStyle(
+                                        color: AppTheme.textSecondary,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -358,7 +443,9 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                                     onPressed: () => Navigator.pop(context),
                                     child: Text(
                                       l?.gotIt ?? 'Got it',
-                                      style: const TextStyle(color: AppTheme.accentGreen),
+                                      style: const TextStyle(
+                                        color: AppTheme.accentGreen,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -373,8 +460,12 @@ class _ProfileSettingsScreenState extends State<ProfileSettingsScreen> {
                   const SizedBox(height: 40),
                   Center(
                     child: Text(
-                      l?.cropGuardFooter ?? 'CropGuard Sri Lanka • Offline-First Agricultural AI',
-                      style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+                      l?.cropGuardFooter ??
+                          'CropGuard Sri Lanka • Works even without internet',
+                      style: const TextStyle(
+                        color: AppTheme.textSecondary,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                 ],

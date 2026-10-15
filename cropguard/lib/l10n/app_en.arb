@@ -31,10 +31,10 @@
   "onboardingTitle1": "CropGuard",
   "@onboardingTitle1": {},
 
-  "onboardingSubtitle1": "AI-Powered Paddy Disease Detection",
+  "onboardingSubtitle1": "Paddy Disease Detection",
   "@onboardingSubtitle1": {},
 
-  "onboardingDesc1": "Instantly diagnose rice crop diseases in the field using local deep learning models optimized for Sri Lankan agricultural zones.",
+  "onboardingDesc1": "Check rice crop health in the field with guidance suited to Sri Lankan farming regions.",
   "@onboardingDesc1": {},
 
   "onboardingTitle2": "Scan Your Crop",
@@ -43,19 +43,19 @@
   "onboardingFeature1": "Use live camera or select from gallery",
   "@onboardingFeature1": {},
 
-  "onboardingFeature2": "Runs 100% offline — no internet connection required",
+  "onboardingFeature2": "Works without internet — no connection needed",
   "@onboardingFeature2": {},
 
-  "onboardingFeature3": "Instant local TFLite FP16 disease classification",
+  "onboardingFeature3": "Get quick results while you are in the field",
   "@onboardingFeature3": {},
 
   "selectYourRegion": "Select Your Region",
   "@selectYourRegion": {},
 
-  "regionSubtitle": "CropGuard automatically selects tuned FP16 AI models based on your Sri Lankan agricultural zone.",
+  "regionSubtitle": "CropGuard adjusts its advice to suit your Sri Lankan farming region.",
   "@regionSubtitle": {},
 
-  "fp16LocalModel": "FP16 TFLite Local Model",
+  "fp16LocalModel": "Recommended for your region",
   "@fp16LocalModel": {},
 
   "confirmRegion": "Confirm Region",
@@ -64,10 +64,10 @@
   "preparingCropGuard": "Preparing CropGuard",
   "@preparingCropGuard": {},
 
-  "aiModel": "AI Model",
+  "aiModel": "Crop care guide",
   "@aiModel": {},
 
-  "preparingModel": "Preparing model for offline use... ({percent}%)",
+  "preparingModel": "Preparing your crop care guide... ({percent}%)",
   "@preparingModel": {
     "placeholders": {
       "percent": { "type": "int" }
@@ -77,17 +77,17 @@
   "readyForOfflineDetection": "✓ Ready for Offline Detection",
   "@readyForOfflineDetection": {},
 
-  "allSetDesc": "FP16 local model loaded for {region}. CropGuard is completely configured for offline field use.",
+  "allSetDesc": "CropGuard is ready to help you care for crops in {region}, even without internet.",
   "@allSetDesc": {
     "placeholders": {
       "region": { "type": "String" }
     }
   },
 
-  "regionalModelInstalled": "Regional FP16 Model Installed",
+  "regionalModelInstalled": "Regional crop guide ready",
   "@regionalModelInstalled": {},
 
-  "offlineEngineReady": "Offline Inference Engine Ready",
+  "offlineEngineReady": "Works without internet",
   "@offlineEngineReady": {},
 
   "regionActive": "{region} Active",
@@ -115,26 +115,26 @@
   "scanYourCrop": "Scan Your Crop",
   "@scanYourCrop": {},
 
-  "scanDesc": "Detect possible diseases from a paddy leaf photo using offline AI.",
+  "scanDesc": "Check for possible diseases from a paddy leaf photo, even without internet.",
   "@scanDesc": {},
 
   "startScan": "Start Scan",
   "@startScan": {},
 
-  "syncingOfflineSamples": "Syncing offline samples...",
+  "syncingOfflineSamples": "Saving your reports...",
   "@syncingOfflineSamples": {},
 
-  "offlineAIReady": "● Offline AI Ready",
+  "offlineAIReady": "● Ready to use without internet",
   "@offlineAIReady": {},
 
-  "samplesQueuedForSync": "{count} sample(s) queued for sync",
+  "samplesQueuedForSync": "{count} report(s) waiting to be sent",
   "@samplesQueuedForSync": {
     "placeholders": {
       "count": { "type": "int" }
     }
   },
 
-  "allSamplesSynced": "✓ Offline AI Ready • All samples synced",
+  "allSamplesSynced": "✓ Ready to use • Reports are up to date",
   "@allSamplesSynced": {},
 
   "recentDiagnoses": "Recent Diagnoses",
@@ -174,14 +174,14 @@
   "analyzingTitle": "Analyzing",
   "@analyzingTitle": {},
 
-  "activeModel": "Active Model: {region}",
+  "activeModel": "Crop guide: {region}",
   "@activeModel": {
     "placeholders": {
       "region": { "type": "String" }
     }
   },
 
-  "localFP16Engine": "Local FP16 Engine",
+  "localFP16Engine": "Works on your phone",
   "@localFP16Engine": {},
 
   "positionLeaf": "Position the paddy leaf inside the frame",
@@ -202,14 +202,14 @@
   "analyzingOnDevice": "Analyzing on your device...",
   "@analyzingOnDevice": {},
 
-  "runningLocalModel": "Running local {region} FP16 model",
+  "runningLocalModel": "Checking your leaf for {region}...",
   "@runningLocalModel": {
     "placeholders": {
       "region": { "type": "String" }
     }
   },
 
-  "offlineAIInference": "100% Offline AI Inference",
+  "offlineAIInference": "Works without internet",
   "@offlineAIInference": {},
 
   "detectionResult": "Detection Result",
@@ -234,7 +234,7 @@
     }
   },
 
-  "modelClassProbabilities": "Model Class Probabilities (Local FP16)",
+  "modelClassProbabilities": "Possible matches",
   "@modelClassProbabilities": {},
 
   "helpImproveDiagnosis": "Help Improve This Diagnosis",
@@ -264,7 +264,7 @@
   "diagnosisHistory": "Diagnosis History",
   "@diagnosisHistory": {},
 
-  "syncQueue": "Sync Queue",
+  "syncQueue": "Saved Reports",
   "@syncQueue": {},
 
   "filterAll": "All",
@@ -285,7 +285,7 @@
   "needsReview": "Needs Review",
   "@needsReview": {},
 
-  "aiPredicted": "AI Predicted: {disease} ({confidence}%)",
+  "aiPredicted": "Possible result: {disease} ({confidence}%)",
   "@aiPredicted": {
     "placeholders": {
       "disease": { "type": "String" },
@@ -306,17 +306,17 @@
     }
   },
 
-  "syncedSamples": "Successfully synced {count} sample(s) with cloud database",
+  "syncedSamples": "Successfully sent {count} report(s)",
   "@syncedSamples": {
     "placeholders": {
       "count": { "type": "int" }
     }
   },
 
-  "allSamplesUpToDate": "All samples up to date (Queue synced or offline)",
+  "allSamplesUpToDate": "Your saved reports are up to date",
   "@allSamplesUpToDate": {},
 
-  "sampleRemovedFromQueue": "Sample removed from queue",
+  "sampleRemovedFromQueue": "Report removed",
   "@sampleRemovedFromQueue": {},
 
   "regionConfTitle": "Region: {region}",
@@ -351,16 +351,16 @@
   "farmerProfile": "Farmer Profile",
   "@farmerProfile": {},
 
-  "sectionAiEngine": "AI & OFFLINE ENGINE",
+  "sectionAiEngine": "CROP CARE",
   "@sectionAiEngine": {},
 
   "activeAgriculturalRegion": "Active Agricultural Region",
   "@activeAgriculturalRegion": {},
 
-  "activeRegionDesc": "Loads regional FP16 TFLite model tuned for local disease factors.",
+  "activeRegionDesc": "Use crop care guidance suited to your selected region.",
   "@activeRegionDesc": {},
 
-  "nineRegionalModelsInstalled": "9 Regional FP16 Models Installed",
+  "nineRegionalModelsInstalled": "Regional crop guides ready",
   "@nineRegionalModelsInstalled": {},
 
   "ready": "Ready",
@@ -372,7 +372,7 @@
   "aboutCropGuard": "About CropGuard",
   "@aboutCropGuard": {},
 
-  "versionInfo": "AI Paddy Disease Detection v1.0.0",
+  "versionInfo": "Paddy crop care v1.0.0",
   "@versionInfo": {},
 
   "fieldScanningGuide": "Field Scanning Guide",
@@ -393,20 +393,20 @@
   "tip3": "• Avoid severe shadows or extremely blurry photos.",
   "@tip3": {},
 
-  "tip4": "• Predictions under 80% confidence are automatically saved for expert review.",
+  "tip4": "• Results that are not clear are saved so they can be checked later.",
   "@tip4": {},
 
   "gotIt": "Got it",
   "@gotIt": {},
 
-  "activeAIModelSet": "Active AI Model set to {region}",
+  "activeAIModelSet": "Crop guide set to {region}",
   "@activeAIModelSet": {
     "placeholders": {
       "region": { "type": "String" }
     }
   },
 
-  "cropGuardFooter": "CropGuard Sri Lanka • Offline-First Agricultural AI",
+  "cropGuardFooter": "CropGuard Sri Lanka • Made for farmers",
   "@cropGuardFooter": {},
 
   "sectionLanguage": "LANGUAGE",

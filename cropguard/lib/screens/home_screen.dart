@@ -11,10 +11,7 @@ import 'profile_settings_screen.dart';
 class HomeScreen extends StatefulWidget {
   final Function(int)? onNavigateToTab;
 
-  const HomeScreen({
-    super.key,
-    this.onNavigateToTab,
-  });
+  const HomeScreen({super.key, this.onNavigateToTab});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -93,7 +90,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(height: 2),
                       Row(
                         children: [
-                          const Icon(Icons.location_on, color: AppTheme.accentGreen, size: 14),
+                          const Icon(
+                            Icons.location_on,
+                            color: AppTheme.accentGreen,
+                            size: 14,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             regionName,
@@ -110,19 +111,28 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.notifications_outlined, color: AppTheme.textPrimary),
+                        icon: const Icon(
+                          Icons.notifications_outlined,
+                          color: AppTheme.textPrimary,
+                        ),
                         onPressed: () => widget.onNavigateToTab?.call(3),
                       ),
                       IconButton(
                         icon: const CircleAvatar(
                           radius: 16,
                           backgroundColor: AppTheme.surfaceDark,
-                          child: Icon(Icons.person_outline, color: AppTheme.accentGreen, size: 20),
+                          child: Icon(
+                            Icons.person_outline,
+                            color: AppTheme.accentGreen,
+                            size: 20,
+                          ),
                         ),
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (_) => const ProfileSettingsScreen()),
+                            MaterialPageRoute(
+                              builder: (_) => const ProfileSettingsScreen(),
+                            ),
                           ).then((_) => _loadState());
                         },
                       ),
@@ -143,7 +153,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(color: AppTheme.accentGreen.withValues(alpha: 0.4), width: 1.5),
+                  border: Border.all(
+                    color: AppTheme.accentGreen.withValues(alpha: 0.4),
+                    width: 1.5,
+                  ),
                   boxShadow: [
                     BoxShadow(
                       color: AppTheme.accentGreen.withValues(alpha: 0.1),
@@ -160,7 +173,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: AppTheme.accentGreen,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.camera_alt_rounded, color: Colors.white, size: 38),
+                      child: const Icon(
+                        Icons.camera_alt_rounded,
+                        color: Colors.white,
+                        size: 38,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     Text(
@@ -173,7 +190,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      l?.scanDesc ?? 'Detect possible diseases from a paddy leaf photo using offline AI.',
+                      l?.scanDesc ??
+                          'Check for possible diseases from a paddy leaf photo, even without internet.',
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         color: Color(0xFFD0E0D0),
@@ -196,7 +214,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       icon: const Icon(Icons.center_focus_strong_rounded),
                       label: Text(
                         l?.startScan ?? 'Start Scan',
-                        style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ],
@@ -207,7 +228,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // Offline / Sync Status Badge
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: AppTheme.surfaceDark,
                   borderRadius: BorderRadius.circular(14),
@@ -218,18 +242,24 @@ class _HomeScreenState extends State<HomeScreen> {
                     Icon(
                       _isSyncing
                           ? Icons.sync_rounded
-                          : (_pendingCount > 0 ? Icons.cloud_queue_rounded : Icons.check_circle_outline_rounded),
-                      color: _pendingCount > 0 ? AppTheme.statusWarning : AppTheme.accentGreen,
+                          : (_pendingCount > 0
+                                ? Icons.cloud_queue_rounded
+                                : Icons.check_circle_outline_rounded),
+                      color: _pendingCount > 0
+                          ? AppTheme.statusWarning
+                          : AppTheme.accentGreen,
                       size: 20,
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         _isSyncing
-                            ? (l?.syncingOfflineSamples ?? 'Syncing offline samples...')
+                            ? (l?.syncingOfflineSamples ??
+                                  'Saving your reports...')
                             : (_pendingCount > 0
-                                ? '${l?.offlineAIReady ?? '● Offline AI Ready'} • ${l?.samplesQueuedForSync(_pendingCount) ?? '$_pendingCount sample(s) queued for sync'}'
-                                : (l?.allSamplesSynced ?? '✓ Offline AI Ready • All samples synced')),
+                                  ? '${l?.offlineAIReady ?? '● Ready to use without internet'} • ${l?.samplesQueuedForSync(_pendingCount) ?? '$_pendingCount report(s) waiting to be sent'}'
+                                  : (l?.allSamplesSynced ??
+                                        '✓ Ready to use • Reports are up to date')),
                         style: const TextStyle(
                           color: AppTheme.textPrimary,
                           fontSize: 13,
@@ -259,7 +289,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () => widget.onNavigateToTab?.call(2),
                     child: Text(
                       l?.viewAll ?? 'View All',
-                      style: const TextStyle(color: AppTheme.accentGreen, fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                        color: AppTheme.accentGreen,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
@@ -285,7 +318,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: AppTheme.primaryGreen.withValues(alpha: 0.2),
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: const Icon(Icons.nature_rounded, color: AppTheme.accentGreen, size: 26),
+                        child: const Icon(
+                          Icons.nature_rounded,
+                          color: AppTheme.accentGreen,
+                          size: 26,
+                        ),
                       ),
                       const SizedBox(width: 14),
                       Expanded(
@@ -303,12 +340,18 @@ class _HomeScreenState extends State<HomeScreen> {
                             const SizedBox(height: 2),
                             Text(
                               '${l?.confidence ?? 'Confidence'}: 92.4% • $regionName',
-                              style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+                              style: const TextStyle(
+                                color: AppTheme.textSecondary,
+                                fontSize: 12,
+                              ),
                             ),
                           ],
                         ),
                       ),
-                      const Icon(Icons.chevron_right_rounded, color: AppTheme.textSecondary),
+                      const Icon(
+                        Icons.chevron_right_rounded,
+                        color: AppTheme.textSecondary,
+                      ),
                     ],
                   ),
                 ),
@@ -332,7 +375,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     onPressed: () => widget.onNavigateToTab?.call(3),
                     child: Text(
                       l?.alertsHub ?? 'Alerts Hub',
-                      style: const TextStyle(color: AppTheme.accentGreen, fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                        color: AppTheme.accentGreen,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
@@ -355,7 +401,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: AppTheme.statusWarning.withValues(alpha: 0.15),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.warning_amber_rounded, color: AppTheme.statusWarning, size: 20),
+                      child: const Icon(
+                        Icons.warning_amber_rounded,
+                        color: AppTheme.statusWarning,
+                        size: 20,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -363,7 +413,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            l?.pestAdvisoryTitle ?? 'Pest Advisory: Rice Hispa Alert',
+                            l?.pestAdvisoryTitle ??
+                                'Pest Advisory: Rice Hispa Alert',
                             style: const TextStyle(
                               color: AppTheme.textPrimary,
                               fontSize: 14,
@@ -374,7 +425,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           Text(
                             l?.pestAdvisoryDesc(regionName) ??
                                 'High humidity reported in $regionName. Check young paddy leaves.',
-                            style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12),
+                            style: const TextStyle(
+                              color: AppTheme.textSecondary,
+                              fontSize: 12,
+                            ),
                           ),
                         ],
                       ),

@@ -163,13 +163,13 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingSubtitle1.
   ///
   /// In en, this message translates to:
-  /// **'AI-Powered Paddy Disease Detection'**
+  /// **'Paddy Disease Detection'**
   String get onboardingSubtitle1;
 
   /// No description provided for @onboardingDesc1.
   ///
   /// In en, this message translates to:
-  /// **'Instantly diagnose rice crop diseases in the field using local deep learning models optimized for Sri Lankan agricultural zones.'**
+  /// **'Check rice crop health in the field with guidance suited to Sri Lankan farming regions.'**
   String get onboardingDesc1;
 
   /// No description provided for @onboardingTitle2.
@@ -187,13 +187,13 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingFeature2.
   ///
   /// In en, this message translates to:
-  /// **'Runs 100% offline — no internet connection required'**
+  /// **'Works without internet — no connection needed'**
   String get onboardingFeature2;
 
   /// No description provided for @onboardingFeature3.
   ///
   /// In en, this message translates to:
-  /// **'Instant local TFLite FP16 disease classification'**
+  /// **'Get quick results while you are in the field'**
   String get onboardingFeature3;
 
   /// No description provided for @selectYourRegion.
@@ -205,13 +205,13 @@ abstract class AppLocalizations {
   /// No description provided for @regionSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'CropGuard automatically selects tuned FP16 AI models based on your Sri Lankan agricultural zone.'**
+  /// **'CropGuard adjusts its advice to suit your Sri Lankan farming region.'**
   String get regionSubtitle;
 
   /// No description provided for @fp16LocalModel.
   ///
   /// In en, this message translates to:
-  /// **'FP16 TFLite Local Model'**
+  /// **'Recommended for your region'**
   String get fp16LocalModel;
 
   /// No description provided for @confirmRegion.
@@ -229,13 +229,13 @@ abstract class AppLocalizations {
   /// No description provided for @aiModel.
   ///
   /// In en, this message translates to:
-  /// **'AI Model'**
+  /// **'Crop care guide'**
   String get aiModel;
 
   /// No description provided for @preparingModel.
   ///
   /// In en, this message translates to:
-  /// **'Preparing model for offline use... ({percent}%)'**
+  /// **'Preparing your crop care guide... ({percent}%)'**
   String preparingModel(int percent);
 
   /// No description provided for @readyForOfflineDetection.
@@ -247,19 +247,19 @@ abstract class AppLocalizations {
   /// No description provided for @allSetDesc.
   ///
   /// In en, this message translates to:
-  /// **'FP16 local model loaded for {region}. CropGuard is completely configured for offline field use.'**
+  /// **'CropGuard is ready to help you care for crops in {region}, even without internet.'**
   String allSetDesc(String region);
 
   /// No description provided for @regionalModelInstalled.
   ///
   /// In en, this message translates to:
-  /// **'Regional FP16 Model Installed'**
+  /// **'Regional crop guide ready'**
   String get regionalModelInstalled;
 
   /// No description provided for @offlineEngineReady.
   ///
   /// In en, this message translates to:
-  /// **'Offline Inference Engine Ready'**
+  /// **'Works without internet'**
   String get offlineEngineReady;
 
   /// No description provided for @regionActive.
@@ -307,7 +307,7 @@ abstract class AppLocalizations {
   /// No description provided for @scanDesc.
   ///
   /// In en, this message translates to:
-  /// **'Detect possible diseases from a paddy leaf photo using offline AI.'**
+  /// **'Check for possible diseases from a paddy leaf photo, even without internet.'**
   String get scanDesc;
 
   /// No description provided for @startScan.
@@ -319,25 +319,25 @@ abstract class AppLocalizations {
   /// No description provided for @syncingOfflineSamples.
   ///
   /// In en, this message translates to:
-  /// **'Syncing offline samples...'**
+  /// **'Saving your reports...'**
   String get syncingOfflineSamples;
 
   /// No description provided for @offlineAIReady.
   ///
   /// In en, this message translates to:
-  /// **'● Offline AI Ready'**
+  /// **'● Ready to use without internet'**
   String get offlineAIReady;
 
   /// No description provided for @samplesQueuedForSync.
   ///
   /// In en, this message translates to:
-  /// **'{count} sample(s) queued for sync'**
+  /// **'{count} report(s) waiting to be sent'**
   String samplesQueuedForSync(int count);
 
   /// No description provided for @allSamplesSynced.
   ///
   /// In en, this message translates to:
-  /// **'✓ Offline AI Ready • All samples synced'**
+  /// **'✓ Ready to use • Reports are up to date'**
   String get allSamplesSynced;
 
   /// No description provided for @recentDiagnoses.
@@ -409,13 +409,13 @@ abstract class AppLocalizations {
   /// No description provided for @activeModel.
   ///
   /// In en, this message translates to:
-  /// **'Active Model: {region}'**
+  /// **'Crop guide: {region}'**
   String activeModel(String region);
 
   /// No description provided for @localFP16Engine.
   ///
   /// In en, this message translates to:
-  /// **'Local FP16 Engine'**
+  /// **'Works on your phone'**
   String get localFP16Engine;
 
   /// No description provided for @positionLeaf.
@@ -457,13 +457,13 @@ abstract class AppLocalizations {
   /// No description provided for @runningLocalModel.
   ///
   /// In en, this message translates to:
-  /// **'Running local {region} FP16 model'**
+  /// **'Checking your leaf for {region}...'**
   String runningLocalModel(String region);
 
   /// No description provided for @offlineAIInference.
   ///
   /// In en, this message translates to:
-  /// **'100% Offline AI Inference'**
+  /// **'Works without internet'**
   String get offlineAIInference;
 
   /// No description provided for @detectionResult.
@@ -505,7 +505,7 @@ abstract class AppLocalizations {
   /// No description provided for @modelClassProbabilities.
   ///
   /// In en, this message translates to:
-  /// **'Model Class Probabilities (Local FP16)'**
+  /// **'Possible matches'**
   String get modelClassProbabilities;
 
   /// No description provided for @helpImproveDiagnosis.
@@ -565,7 +565,7 @@ abstract class AppLocalizations {
   /// No description provided for @syncQueue.
   ///
   /// In en, this message translates to:
-  /// **'Sync Queue'**
+  /// **'Saved Reports'**
   String get syncQueue;
 
   /// No description provided for @filterAll.
@@ -607,7 +607,7 @@ abstract class AppLocalizations {
   /// No description provided for @aiPredicted.
   ///
   /// In en, this message translates to:
-  /// **'AI Predicted: {disease} ({confidence}%)'**
+  /// **'Possible result: {disease} ({confidence}%)'**
   String aiPredicted(String disease, String confidence);
 
   /// No description provided for @selectCorrectDisease.
@@ -631,19 +631,19 @@ abstract class AppLocalizations {
   /// No description provided for @syncedSamples.
   ///
   /// In en, this message translates to:
-  /// **'Successfully synced {count} sample(s) with cloud database'**
+  /// **'Successfully sent {count} report(s)'**
   String syncedSamples(int count);
 
   /// No description provided for @allSamplesUpToDate.
   ///
   /// In en, this message translates to:
-  /// **'All samples up to date (Queue synced or offline)'**
+  /// **'Your saved reports are up to date'**
   String get allSamplesUpToDate;
 
   /// No description provided for @sampleRemovedFromQueue.
   ///
   /// In en, this message translates to:
-  /// **'Sample removed from queue'**
+  /// **'Report removed'**
   String get sampleRemovedFromQueue;
 
   /// No description provided for @regionConfTitle.
@@ -697,7 +697,7 @@ abstract class AppLocalizations {
   /// No description provided for @sectionAiEngine.
   ///
   /// In en, this message translates to:
-  /// **'AI & OFFLINE ENGINE'**
+  /// **'CROP CARE'**
   String get sectionAiEngine;
 
   /// No description provided for @activeAgriculturalRegion.
@@ -709,13 +709,13 @@ abstract class AppLocalizations {
   /// No description provided for @activeRegionDesc.
   ///
   /// In en, this message translates to:
-  /// **'Loads regional FP16 TFLite model tuned for local disease factors.'**
+  /// **'Use crop care guidance suited to your selected region.'**
   String get activeRegionDesc;
 
   /// No description provided for @nineRegionalModelsInstalled.
   ///
   /// In en, this message translates to:
-  /// **'9 Regional FP16 Models Installed'**
+  /// **'Regional crop guides ready'**
   String get nineRegionalModelsInstalled;
 
   /// No description provided for @ready.
@@ -739,7 +739,7 @@ abstract class AppLocalizations {
   /// No description provided for @versionInfo.
   ///
   /// In en, this message translates to:
-  /// **'AI Paddy Disease Detection v1.0.0'**
+  /// **'Paddy crop care v1.0.0'**
   String get versionInfo;
 
   /// No description provided for @fieldScanningGuide.
@@ -781,7 +781,7 @@ abstract class AppLocalizations {
   /// No description provided for @tip4.
   ///
   /// In en, this message translates to:
-  /// **'• Predictions under 80% confidence are automatically saved for expert review.'**
+  /// **'• Results that are not clear are saved so they can be checked later.'**
   String get tip4;
 
   /// No description provided for @gotIt.
@@ -793,13 +793,13 @@ abstract class AppLocalizations {
   /// No description provided for @activeAIModelSet.
   ///
   /// In en, this message translates to:
-  /// **'Active AI Model set to {region}'**
+  /// **'Crop guide set to {region}'**
   String activeAIModelSet(String region);
 
   /// No description provided for @cropGuardFooter.
   ///
   /// In en, this message translates to:
-  /// **'CropGuard Sri Lanka • Offline-First Agricultural AI'**
+  /// **'CropGuard Sri Lanka • Made for farmers'**
   String get cropGuardFooter;
 
   /// No description provided for @sectionLanguage.

@@ -16,8 +16,8 @@ class ActiveLearningReviewScreen extends StatefulWidget {
       _ActiveLearningReviewScreenState();
 }
 
-class _ActiveLearningReviewScreenState
-    extends State<ActiveLearningReviewScreen> with WidgetsBindingObserver {
+class _ActiveLearningReviewScreenState extends State<ActiveLearningReviewScreen>
+    with WidgetsBindingObserver {
   final ActiveLearningQueueService _queueService = ActiveLearningQueueService();
   List<ActiveLearningSample> _samples = [];
   bool _isLoading = true;
@@ -68,11 +68,13 @@ class _ActiveLearningReviewScreenState
     final l = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(synced > 0
-            ? (l?.syncedSamples(synced) ?? 'Synced $synced sample(s)')
-            : reviewed > 0
-                ? 'Updated $reviewed reviewed sample(s)'
-                : (l?.allSamplesUpToDate ?? 'All samples up to date')),
+        content: Text(
+          synced > 0
+              ? (l?.syncedSamples(synced) ?? 'Synced $synced sample(s)')
+              : reviewed > 0
+              ? 'Updated $reviewed reviewed sample(s)'
+              : (l?.allSamplesUpToDate ?? 'All samples up to date'),
+        ),
         backgroundColor: AppTheme.accentGreen,
       ),
     );
@@ -85,7 +87,9 @@ class _ActiveLearningReviewScreenState
     if (!mounted) return;
     final l = AppLocalizations.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l?.sampleRemovedFromQueue ?? 'Sample removed from queue')),
+      SnackBar(
+        content: Text(l?.sampleRemovedFromQueue ?? 'Sample removed from queue'),
+      ),
     );
   }
 
@@ -126,7 +130,10 @@ class _ActiveLearningReviewScreenState
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.close, color: AppTheme.textSecondary),
+                        icon: const Icon(
+                          Icons.close,
+                          color: AppTheme.textSecondary,
+                        ),
                         onPressed: () => Navigator.pop(context),
                       ),
                     ],
@@ -143,8 +150,11 @@ class _ActiveLearningReviewScreenState
                         height: 160,
                         color: AppTheme.darkBg,
                         child: const Center(
-                          child: Icon(Icons.eco_rounded,
-                              color: AppTheme.accentGreen, size: 40),
+                          child: Icon(
+                            Icons.eco_rounded,
+                            color: AppTheme.accentGreen,
+                            size: 40,
+                          ),
                         ),
                       ),
                     ),
@@ -155,23 +165,28 @@ class _ActiveLearningReviewScreenState
                           sample.predictedDisease,
                           (sample.confidence * 100).toStringAsFixed(1),
                         ) ??
-                        'AI Predicted: ${sample.predictedDisease} (${(sample.confidence * 100).toStringAsFixed(1)}%)',
+                        'App result: ${sample.predictedDisease} (${(sample.confidence * 100).toStringAsFixed(1)}%)',
                     style: const TextStyle(
-                        color: AppTheme.statusWarning,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold),
+                      color: AppTheme.statusWarning,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 12),
                   Text(
                     l?.selectCorrectDisease ?? 'Select Correct Disease Label:',
                     style: const TextStyle(
-                        color: AppTheme.textPrimary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600),
+                      color: AppTheme.textPrimary,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<String>(
-                    initialValue: RegionalModelsConfig.globalClassLabels.contains(selectedDisease)
+                    initialValue:
+                        RegionalModelsConfig.globalClassLabels.contains(
+                          selectedDisease,
+                        )
                         ? selectedDisease
                         : RegionalModelsConfig.globalClassLabels.first,
                     dropdownColor: const Color(0xFF252D25),
@@ -180,12 +195,15 @@ class _ActiveLearningReviewScreenState
                       fillColor: AppTheme.darkBg,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide:
-                            const BorderSide(color: AppTheme.surfaceBorder),
+                        borderSide: const BorderSide(
+                          color: AppTheme.surfaceBorder,
+                        ),
                       ),
                     ),
                     // Dropdown shows localized names but stores original class name
-                    items: RegionalModelsConfig.globalClassLabels.map((disease) {
+                    items: RegionalModelsConfig.globalClassLabels.map((
+                      disease,
+                    ) {
                       return DropdownMenuItem<String>(
                         value: disease,
                         child: Text(
@@ -195,7 +213,9 @@ class _ActiveLearningReviewScreenState
                       );
                     }).toList(),
                     onChanged: (val) {
-                      if (val != null) setModalState(() => selectedDisease = val);
+                      if (val != null) {
+                        setModalState(() => selectedDisease = val);
+                      }
                     },
                   ),
                   const SizedBox(height: 20),
@@ -204,10 +224,15 @@ class _ActiveLearningReviewScreenState
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(l?.correctedLabelSaved(
+                          content: Text(
+                            l?.correctedLabelSaved(
                                   DiseaseLocalizer.getDisplayName(
-                                      context, selectedDisease)) ??
-                              '✓ Corrected label saved as "$selectedDisease"'),
+                                    context,
+                                    selectedDisease,
+                                  ),
+                                ) ??
+                                '✓ Corrected label saved as "$selectedDisease"',
+                          ),
                           backgroundColor: AppTheme.accentGreen,
                         ),
                       );
@@ -226,9 +251,11 @@ class _ActiveLearningReviewScreenState
   List<ActiveLearningSample> get _filteredSamples {
     if (_selectedFilterKey == 'Confirmed') {
       return _samples
-          .where((s) =>
-              s.status == SampleSyncStatus.synced ||
-              s.status == SampleSyncStatus.reviewed)
+          .where(
+            (s) =>
+                s.status == SampleSyncStatus.synced ||
+                s.status == SampleSyncStatus.reviewed,
+          )
           .toList();
     } else if (_selectedFilterKey == 'Needs Review') {
       return _samples
@@ -259,7 +286,7 @@ class _ActiveLearningReviewScreenState
         actions: [
           IconButton(
             icon: const Icon(Icons.sync_rounded, color: AppTheme.accentGreen),
-            tooltip: l?.syncQueue ?? 'Sync Queue',
+            tooltip: l?.syncQueue ?? 'Send saved reports',
             onPressed: _syncSamples,
           ),
         ],
@@ -284,9 +311,12 @@ class _ActiveLearningReviewScreenState
                       selectedColor: AppTheme.accentGreen,
                       backgroundColor: AppTheme.darkBg,
                       labelStyle: TextStyle(
-                        color: isSelected ? Colors.white : AppTheme.textSecondary,
-                        fontWeight:
-                            isSelected ? FontWeight.bold : FontWeight.normal,
+                        color: isSelected
+                            ? Colors.white
+                            : AppTheme.textSecondary,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.normal,
                       ),
                       onSelected: (_) =>
                           setState(() => _selectedFilterKey = key),
@@ -301,145 +331,162 @@ class _ActiveLearningReviewScreenState
               child: _isLoading
                   ? const Center(
                       child: CircularProgressIndicator(
-                          color: AppTheme.accentGreen))
+                        color: AppTheme.accentGreen,
+                      ),
+                    )
                   : filtered.isEmpty
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.history_toggle_off_rounded,
-                                  size: 64, color: AppTheme.textSecondary),
-                              const SizedBox(height: 16),
-                              Text(
-                                l?.noDiagnosesFound ?? 'No diagnoses found',
-                                style: const TextStyle(
-                                    color: AppTheme.textPrimary,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                l?.noDiagnosesDesc ??
-                                    'Scanned crops and uncertain predictions will appear here',
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                    color: AppTheme.textSecondary, fontSize: 13),
-                              ),
-                            ],
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.history_toggle_off_rounded,
+                            size: 64,
+                            color: AppTheme.textSecondary,
                           ),
-                        )
-                      : ListView.builder(
-                          padding: const EdgeInsets.all(16),
-                          itemCount: filtered.length,
-                          itemBuilder: (context, index) {
-                            final sample = filtered[index];
-                            final confPercent =
-                                (sample.confidence * 100).toStringAsFixed(1);
-                            final isReviewed =
-                                sample.status == SampleSyncStatus.reviewed;
-                            final localizedDisease = DiseaseLocalizer
-                                .getDisplayName(context, sample.predictedDisease);
-                            final localizedRegion =
-                                RegionLocalizer.getDisplayName(
+                          const SizedBox(height: 16),
+                          Text(
+                            l?.noDiagnosesFound ?? 'No diagnoses found',
+                            style: const TextStyle(
+                              color: AppTheme.textPrimary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            l?.noDiagnosesDesc ??
+                                'Scanned crops and uncertain predictions will appear here',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: AppTheme.textSecondary,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: filtered.length,
+                      itemBuilder: (context, index) {
+                        final sample = filtered[index];
+                        final confPercent = (sample.confidence * 100)
+                            .toStringAsFixed(1);
+                        final isReviewed =
+                            sample.status == SampleSyncStatus.reviewed;
+                        final localizedDisease =
+                            DiseaseLocalizer.getDisplayName(
                               context,
-                              sample.regionId,
-                              fallback: sample.regionDisplayName,
+                              sample.predictedDisease,
                             );
+                        final localizedRegion = RegionLocalizer.getDisplayName(
+                          context,
+                          sample.regionId,
+                          fallback: sample.regionDisplayName,
+                        );
 
-                            return Container(
-                              margin: const EdgeInsets.only(bottom: 12),
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          decoration: BoxDecoration(
+                            color: AppTheme.surfaceDark,
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: !isReviewed
+                                  ? AppTheme.statusWarning.withValues(
+                                      alpha: 0.5,
+                                    )
+                                  : AppTheme.surfaceBorder,
+                            ),
+                          ),
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.all(12),
+                            leading: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: SizedBox(
+                                width: 54,
+                                height: 54,
+                                child: Image.file(
+                                  File(sample.localImagePath),
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (ctx, err, stack) => Container(
+                                    color: AppTheme.darkBg,
+                                    child: const Icon(
+                                      Icons.eco,
+                                      color: AppTheme.accentGreen,
+                                      size: 24,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            title: Text(
+                              localizedDisease,
+                              style: const TextStyle(
+                                color: AppTheme.textPrimary,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                            ),
+                            subtitle: Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '$localizedRegion • ${l?.confLabel(confPercent) ?? 'Conf: $confPercent%'}',
+                                    style: const TextStyle(
+                                      color: AppTheme.textSecondary,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  if (sample.expertLabel != null) ...[
+                                    const SizedBox(height: 3),
+                                    Text(
+                                      'Expert: ${DiseaseLocalizer.getDisplayName(context, sample.expertLabel!)}',
+                                      style: const TextStyle(
+                                        color: AppTheme.accentGreen,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                            trailing: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
                               decoration: BoxDecoration(
-                                color: AppTheme.surfaceDark,
-                                borderRadius: BorderRadius.circular(14),
-                                border: Border.all(
+                                color: !isReviewed
+                                    ? AppTheme.statusWarning.withValues(
+                                        alpha: 0.15,
+                                      )
+                                    : AppTheme.accentGreen.withValues(
+                                        alpha: 0.15,
+                                      ),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                !isReviewed
+                                    ? (l?.needsReview ?? 'Needs Review')
+                                    : (l?.confirmed ?? 'Confirmed'),
+                                style: TextStyle(
                                   color: !isReviewed
                                       ? AppTheme.statusWarning
-                                          .withValues(alpha: 0.5)
-                                      : AppTheme.surfaceBorder,
+                                      : AppTheme.accentGreen,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              child: ListTile(
-                                contentPadding: const EdgeInsets.all(12),
-                                leading: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: SizedBox(
-                                    width: 54,
-                                    height: 54,
-                                    child: Image.file(
-                                      File(sample.localImagePath),
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (ctx, err, stack) =>
-                                          Container(
-                                        color: AppTheme.darkBg,
-                                        child: const Icon(Icons.eco,
-                                            color: AppTheme.accentGreen,
-                                            size: 24),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                title: Text(
-                                  localizedDisease,
-                                  style: const TextStyle(
-                                    color: AppTheme.textPrimary,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                  ),
-                                ),
-                                subtitle: Padding(
-                                  padding: const EdgeInsets.only(top: 4),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        '$localizedRegion • ${l?.confLabel(confPercent) ?? 'Conf: $confPercent%'}',
-                                        style: const TextStyle(
-                                            color: AppTheme.textSecondary,
-                                            fontSize: 12),
-                                      ),
-                                      if (sample.expertLabel != null) ...[
-                                        const SizedBox(height: 3),
-                                        Text(
-                                          'Expert: ${DiseaseLocalizer.getDisplayName(context, sample.expertLabel!)}',
-                                          style: const TextStyle(
-                                            color: AppTheme.accentGreen,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ],
-                                    ],
-                                  ),
-                                ),
-                                trailing: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: !isReviewed
-                                        ? AppTheme.statusWarning
-                                            .withValues(alpha: 0.15)
-                                        : AppTheme.accentGreen
-                                            .withValues(alpha: 0.15),
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    !isReviewed
-                                        ? (l?.needsReview ?? 'Needs Review')
-                                        : (l?.confirmed ?? 'Confirmed'),
-                                    style: TextStyle(
-                                      color: !isReviewed
-                                          ? AppTheme.statusWarning
-                                          : AppTheme.accentGreen,
-                                      fontSize: 11,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                onTap: () => _showCorrectionDialog(sample),
-                              ),
-                            );
-                          },
-                        ),
+                            ),
+                            onTap: () => _showCorrectionDialog(sample),
+                          ),
+                        );
+                      },
+                    ),
             ),
           ],
         ),

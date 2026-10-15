@@ -67,8 +67,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
       {
         'id': '4',
         'type': 'System',
-        'title': '✓ Regional Model Sync Complete',
-        'desc': 'FP16 TFLite model active for $localizedRegion zone. 100% offline inference verified.',
+        'title': '✓ Regional crop guide ready',
+        'desc': 'Crop care guidance for the $localizedRegion region is ready to use without internet.',
         'time': '2d',
         'severity': 'low',
         'icon': Icons.check_circle_rounded,
