@@ -7,6 +7,7 @@ and never leaves the server.
 """
 import logging
 import os
+import time
 
 import requests
 from dotenv import load_dotenv
@@ -18,6 +19,10 @@ logger = logging.getLogger("translation.gemini")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "").strip()
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash").strip()
 GEMINI_TIMEOUT_SECONDS = int(os.getenv("GEMINI_TIMEOUT_SECONDS", "45"))
+GEMINI_MAX_RETRIES = int(os.getenv("GEMINI_MAX_RETRIES", "2"))
+GEMINI_RETRY_BACKOFF_SECONDS = float(
+    os.getenv("GEMINI_RETRY_BACKOFF_SECONDS", "1")
+)
 GEMINI_ENDPOINT = (
     "https://generativelanguage.googleapis.com/v1beta/models/"
     "{model}:generateContent"
@@ -98,23 +103,61 @@ def translate(text: str, target_language: str, source_language: str = "en") -> s
     }
     url = GEMINI_ENDPOINT.format(model=GEMINI_MODEL)
 
-    try:
-        resp = requests.post(
-            url,
-            params={"key": GEMINI_API_KEY},
-            json=payload,
-            timeout=GEMINI_TIMEOUT_SECONDS,
-        )
-    except requests.Timeout as exc:
-        logger.error("Gemini request timed out: %s", exc)
-        raise TranslationError("Translation timed out. Please try again.") from exc
-    except requests.RequestException as exc:
-        logger.error("Gemini request failed: %s", exc)
-        raise TranslationError("Could not reach the translation service.") from exc
+    transient_statuses = {429, 500, 502, 503, 504}
+    resp = None
+    for attempt in range(GEMINI_MAX_RETRIES + 1):
+        try:
+            resp = requests.post(
+                url,
+                params={"key": GEMINI_API_KEY},
+                json=payload,
+                timeout=GEMINI_TIMEOUT_SECONDS,
+            )
+        except requests.Timeout as exc:
+            if attempt < GEMINI_MAX_RETRIES:
+                delay = GEMINI_RETRY_BACKOFF_SECONDS * (2**attempt)
+                logger.warning(
+                    "Gemini request timed out; retrying in %.1f seconds (%d/%d).",
+                    delay,
+                    attempt + 1,
+                    GEMINI_MAX_RETRIES,
+                )
+                time.sleep(delay)
+                continue
+            logger.error("Gemini request timed out: %s", exc)
+            raise TranslationError("Translation timed out. Please try again.") from exc
+        except requests.RequestException as exc:
+            logger.error("Gemini request failed: %s", exc)
+            raise TranslationError("Could not reach the translation service.") from exc
 
+        if resp.status_code not in transient_statuses or attempt >= GEMINI_MAX_RETRIES:
+            break
+
+        retry_after = resp.headers.get("Retry-After")
+        try:
+            delay = min(float(retry_after), 30) if retry_after else (
+                GEMINI_RETRY_BACKOFF_SECONDS * (2**attempt)
+            )
+        except ValueError:
+            delay = GEMINI_RETRY_BACKOFF_SECONDS * (2**attempt)
+        logger.warning(
+            "Gemini HTTP %s; retrying in %.1f seconds (%d/%d).",
+            resp.status_code,
+            delay,
+            attempt + 1,
+            GEMINI_MAX_RETRIES,
+        )
+        time.sleep(delay)
+
+    if resp is None:
+        raise TranslationError("Could not reach the translation service.")
     if resp.status_code != 200:
         # Avoid leaking the key or full body; log status + short snippet.
         logger.error("Gemini HTTP %s: %s", resp.status_code, resp.text[:300])
+        if resp.status_code in transient_statuses:
+            raise TranslationError(
+                "The translation service is temporarily busy. Please try again."
+            )
         raise TranslationError(f"Translation provider error (HTTP {resp.status_code}).")
 
     try:

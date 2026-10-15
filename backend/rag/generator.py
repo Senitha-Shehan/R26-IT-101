@@ -51,7 +51,10 @@ JSON shape:
 def is_available() -> bool:
     """Best-effort check that the Ollama service is reachable."""
     try:
-        resp = requests.get(f"{config.OLLAMA_BASE_URL}/api/tags", timeout=3)
+        resp = requests.get(
+            f"{config.OLLAMA_BASE_URL}/api/tags",
+            timeout=config.OLLAMA_AVAILABILITY_TIMEOUT_SECONDS,
+        )
         return resp.status_code == 200
     except requests.RequestException:
         return False

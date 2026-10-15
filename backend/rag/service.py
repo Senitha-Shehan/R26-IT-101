@@ -5,6 +5,8 @@ This is the single entry point the API layer calls. It is deliberately free of
 FastAPI/HTTP concerns so it stays testable and reusable.
 """
 import logging
+from collections import OrderedDict
+from copy import deepcopy
 from typing import Dict, List, Optional
 
 from rag import config, embeddings, extractive, generator
@@ -25,6 +27,8 @@ _RICE_CLASSES = {
     "sheath blight",
     "healthy rice leaf",
 }
+_TREATMENT_CACHE: OrderedDict[tuple, Dict] = OrderedDict()
+_TREATMENT_CACHE_MAX_SIZE = 64
 
 
 def _infer_crop(disease_name: str, crop: Optional[str]) -> Optional[str]:
@@ -77,11 +81,19 @@ def get_treatment(
     disease_name = (disease_name or "").strip()
     language = language if language in config.SUPPORTED_LANGUAGES else config.DEFAULT_LANGUAGE
     language_name = config.SUPPORTED_LANGUAGES[language]
+    cache_key = (disease_name.lower(), crop.lower() if crop else None, confidence, language)
+    cached = _TREATMENT_CACHE.get(cache_key)
+    if cached is not None:
+        _TREATMENT_CACHE.move_to_end(cache_key)
+        logger.debug("Treatment cache hit for '%s'.", disease_name)
+        return deepcopy(cached)
 
     store = load_store()
     if store is None or store.is_empty:
         logger.warning("RAG index unavailable/empty; returning not-found response.")
-        return _empty_response(disease_name, confidence, language)
+        response = _empty_response(disease_name, confidence, language)
+        _cache_treatment(cache_key, response)
+        return response
 
     crop = _infer_crop(disease_name, crop)
     query = _build_query(disease_name, crop)
@@ -97,7 +109,9 @@ def get_treatment(
         best = hits[0][1] if hits else 0.0
         logger.info("Best similarity %.3f < %.3f for '%s'; treating as not found.",
                     best, config.MIN_SIMILARITY, disease_name)
-        return _empty_response(disease_name, confidence, language)
+        response = _empty_response(disease_name, confidence, language)
+        _cache_treatment(cache_key, response)
+        return response
 
     context_blocks: List[str] = []
     sources: List[Dict] = []
@@ -121,7 +135,7 @@ def get_treatment(
         # Neither the LLM nor the extractor found usable info in the context.
         return _empty_response(disease_name, confidence, language)
 
-    return {
+    response = {
         "found": True,
         "disease_name": disease_name,
         "confidence": confidence,
@@ -136,6 +150,15 @@ def get_treatment(
         "sources": sources,
         "generation_mode": used_mode,
     }
+    _cache_treatment(cache_key, response)
+    return response
+
+
+def _cache_treatment(key: tuple, response: Dict) -> None:
+    _TREATMENT_CACHE[key] = deepcopy(response)
+    _TREATMENT_CACHE.move_to_end(key)
+    while len(_TREATMENT_CACHE) > _TREATMENT_CACHE_MAX_SIZE:
+        _TREATMENT_CACHE.popitem(last=False)
 
 
 def _produce(disease_name, context_blocks, hits, language_name):
@@ -148,6 +171,9 @@ def _produce(disease_name, context_blocks, hits, language_name):
     mode = config.GENERATION_MODE
 
     if mode in ("ollama", "auto"):
+        if mode == "auto" and not generator.is_available():
+            logger.info("Ollama unavailable; using extractive mode immediately.")
+            return extractive.extract(disease_name, hits, language_name), "extractive"
         try:
             result = generator.generate(disease_name, context_blocks, language_name)
             return result, "ollama"
