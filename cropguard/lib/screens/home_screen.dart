@@ -111,13 +111,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     children: [
                       IconButton(
-                        icon: const Icon(
-                          Icons.notifications_outlined,
-                          color: AppTheme.textPrimary,
-                        ),
-                        onPressed: () => widget.onNavigateToTab?.call(3),
-                      ),
-                      IconButton(
                         icon: const CircleAvatar(
                           radius: 16,
                           backgroundColor: AppTheme.surfaceDark,
@@ -369,16 +362,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: AppTheme.textPrimary,
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () => widget.onNavigateToTab?.call(3),
-                    child: Text(
-                      l?.alertsHub ?? 'Alerts Hub',
-                      style: const TextStyle(
-                        color: AppTheme.accentGreen,
-                        fontWeight: FontWeight.w600,
-                      ),
                     ),
                   ),
                 ],

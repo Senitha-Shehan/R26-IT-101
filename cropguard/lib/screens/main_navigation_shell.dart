@@ -4,7 +4,6 @@ import '../core/theme/app_theme.dart';
 import 'home_screen.dart';
 import 'detection/detection_screen.dart';
 import 'review/active_learning_review_screen.dart';
-import 'notification_screen.dart';
 import '../services/active_learning/active_learning_queue_service.dart';
 
 class MainNavigationShell extends StatefulWidget {
@@ -62,7 +61,6 @@ class _MainNavigationShellState extends State<MainNavigationShell>
       HomeScreen(onNavigateToTab: _onTabTapped),
       const DetectionScreen(),
       const ActiveLearningReviewScreen(),
-      const NotificationScreen(),
     ];
 
     return Scaffold(
@@ -101,14 +99,6 @@ class _MainNavigationShellState extends State<MainNavigationShell>
               color: AppTheme.accentGreen,
             ),
             label: l?.navHistory ?? 'History',
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.notifications_outlined),
-            activeIcon: const Icon(
-              Icons.notifications_rounded,
-              color: AppTheme.accentGreen,
-            ),
-            label: l?.navAlerts ?? 'Alerts',
           ),
         ],
       ),
