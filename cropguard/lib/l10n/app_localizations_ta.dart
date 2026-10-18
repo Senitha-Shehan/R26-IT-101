@@ -40,11 +40,11 @@ class AppLocalizationsTa extends AppLocalizations {
   String get onboardingTitle1 => 'CropGuard';
 
   @override
-  String get onboardingSubtitle1 => 'AI-இயக்கும் நெல் நோய் கண்டறிதல்';
+  String get onboardingSubtitle1 => 'நெல் நோய் கண்டறிதல்';
 
   @override
   String get onboardingDesc1 =>
-      'இலங்கையின் விவசாய மண்டலங்களுக்கு ஏற்ற உள்ளூர் AI மாதிரிகளைப் பயன்படுத்தி வயலிலேயே நெல் நோய்களை உடனடியாக கண்டறியுங்கள்.';
+      'இலங்கையின் விவசாய பகுதிகளுக்கான வழிகாட்டுதலுடன் வயலிலேயே நெல் ஆரோக்கியத்தை சரிபாருங்கள்.';
 
   @override
   String get onboardingTitle2 => 'உங்கள் பயிரை பரிசோதிக்கவும்';
@@ -54,20 +54,20 @@ class AppLocalizationsTa extends AppLocalizations {
       'நேரடி கேமரா அல்லது கேலரியைப் பயன்படுத்துங்கள்';
 
   @override
-  String get onboardingFeature2 => '100% Offline — இணைய இணைப்பு தேவையில்லை';
+  String get onboardingFeature2 => 'இணையம் இல்லாமலும் பயன்படுத்தலாம்';
 
   @override
-  String get onboardingFeature3 => 'உடனடி உள்ளூர் TFLite FP16 நோய் கண்டறிதல்';
+  String get onboardingFeature3 => 'வயலிலேயே விரைவான முடிவுகளைப் பெறுங்கள்';
 
   @override
   String get selectYourRegion => 'உங்கள் பகுதியை தேர்ந்தெடுங்கள்';
 
   @override
   String get regionSubtitle =>
-      'உங்கள் இலங்கை விவசாய மண்டலத்தின் அடிப்படையில் CropGuard தானாக AI மாதிரியை தேர்ந்தெடுக்கும்.';
+      'உங்கள் இலங்கை விவசாய பகுதிக்கேற்ற வழிகாட்டுதலை CropGuard அமைக்கும்.';
 
   @override
-  String get fp16LocalModel => 'FP16 உள்ளூர் AI மாதிரி';
+  String get fp16LocalModel => 'உங்கள் பகுதிக்கு பரிந்துரைக்கப்பட்டது';
 
   @override
   String get confirmRegion => 'பகுதியை உறுதிப்படுத்தவும்';
@@ -76,11 +76,11 @@ class AppLocalizationsTa extends AppLocalizations {
   String get preparingCropGuard => 'CropGuard தயாராகிறது';
 
   @override
-  String get aiModel => 'AI மாதிரி';
+  String get aiModel => 'பயிர் பராமரிப்பு வழிகாட்டி';
 
   @override
   String preparingModel(int percent) {
-    return 'ஆஃப்லைன் பயன்பாட்டிற்கு மாதிரி தயாராகிறது... ($percent%)';
+    return 'பயிர் பராமரிப்பு வழிகாட்டி தயாராகிறது... ($percent%)';
   }
 
   @override
@@ -89,14 +89,15 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String allSetDesc(String region) {
-    return '$region க்கான FP16 உள்ளூர் மாதிரி ஏற்றப்பட்டது. CropGuard ஆஃப்லைன் வயல் பயன்பாட்டிற்கு முழுமையாக அமைக்கப்பட்டது.';
+    return '$region க்கான CropGuard தயாராக உள்ளது. இணையம் இல்லாமலும் பயன்படுத்தலாம்.';
   }
 
   @override
-  String get regionalModelInstalled => 'பிராந்திய FP16 மாதிரி நிறுவப்பட்டது';
+  String get regionalModelInstalled =>
+      'பிராந்திய பயிர் வழிகாட்டி தயாராக உள்ளது';
 
   @override
-  String get offlineEngineReady => 'ஆஃப்லைன் AI இயந்திரம் தயாராக உள்ளது';
+  String get offlineEngineReady => 'இணையம் இல்லாமலும் இயங்கும்';
 
   @override
   String regionActive(String region) {
@@ -123,26 +124,25 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get scanDesc =>
-      'ஆஃப்லைன் AI பயன்படுத்தி நெல் இலை புகைப்படத்திலிருந்து நோய்களை கண்டறியுங்கள்.';
+      'இணையம் இல்லாமலும் நெல் இலை புகைப்படத்தில் நோய்களைச் சரிபாருங்கள்.';
 
   @override
   String get startScan => 'ஸ்கேன் ஆரம்பிக்கவும்';
 
   @override
-  String get syncingOfflineSamples =>
-      'ஆஃப்லைன் மாதிரிகள் ஒத்திசைக்கப்படுகின்றன...';
+  String get syncingOfflineSamples => 'உங்கள் அறிக்கைகள் சேமிக்கப்படுகின்றன...';
 
   @override
-  String get offlineAIReady => '● ஆஃப்லைன் AI தயாராக உள்ளது';
+  String get offlineAIReady => '● இணையம் இல்லாமலும் பயன்படுத்தத் தயார்';
 
   @override
   String samplesQueuedForSync(int count) {
-    return '$count மாதிரி(கள்) ஒத்திசைவுக்காக காத்திருக்கின்றன';
+    return 'அனுப்ப காத்திருக்கும் அறிக்கைகள்: $count';
   }
 
   @override
   String get allSamplesSynced =>
-      '✓ ஆஃப்லைன் AI தயாராக உள்ளது • அனைத்து மாதிரிகளும் ஒத்திசைக்கப்பட்டன';
+      '✓ பயன்படுத்தத் தயார் • அறிக்கைகள் புதுப்பிக்கப்பட்டுள்ளன';
 
   @override
   String get recentDiagnoses => 'சமீபத்திய நோய் கண்டறிதல்';
@@ -181,11 +181,11 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String activeModel(String region) {
-    return 'செயலில் உள்ள மாதிரி: $region';
+    return 'பயிர் வழிகாட்டி: $region';
   }
 
   @override
-  String get localFP16Engine => 'உள்ளூர் FP16 இயந்திரம்';
+  String get localFP16Engine => 'உங்கள் தொலைபேசியில் இயங்கும்';
 
   @override
   String get positionLeaf => 'நெல் இலையை சட்டத்தின் உள்ளே வையுங்கள்';
@@ -208,11 +208,11 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String runningLocalModel(String region) {
-    return 'உள்ளூர் $region FP16 மாதிரி இயங்குகிறது';
+    return '$region க்காக இலையைச் சரிபார்க்கிறது';
   }
 
   @override
-  String get offlineAIInference => '100% ஆஃப்லைன் AI பகுப்பாய்வு';
+  String get offlineAIInference => 'இணையம் இல்லாமலும் இயங்கும்';
 
   @override
   String get detectionResult => 'கண்டறிதல் முடிவு';
@@ -238,7 +238,7 @@ class AppLocalizationsTa extends AppLocalizations {
   }
 
   @override
-  String get modelClassProbabilities => 'மாதிரி முடிவுகள் (உள்ளூர் FP16)';
+  String get modelClassProbabilities => 'சாத்தியமான முடிவுகள்';
 
   @override
   String get helpImproveDiagnosis => 'நோய் கண்டறிதலை மேம்படுத்த உதவுங்கள்';
@@ -270,7 +270,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get diagnosisHistory => 'நோய் கண்டறிதல் வரலாறு';
 
   @override
-  String get syncQueue => 'ஒத்திசைக்கவும்';
+  String get syncQueue => 'சேமித்த அறிக்கைகள்';
 
   @override
   String get filterAll => 'அனைத்தும்';
@@ -293,7 +293,7 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String aiPredicted(String disease, String confidence) {
-    return 'AI கணிப்பு: $disease ($confidence%)';
+    return 'சாத்தியமான முடிவு: $disease ($confidence%)';
   }
 
   @override
@@ -309,7 +309,7 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String syncedSamples(int count) {
-    return '$count மாதிரி(கள்) வெற்றிகரமாக ஒத்திசைக்கப்பட்டன';
+    return '$count அறிக்கைகள் வெற்றிகரமாக அனுப்பப்பட்டன';
   }
 
   @override
@@ -317,7 +317,7 @@ class AppLocalizationsTa extends AppLocalizations {
       'அனைத்து மாதிரிகளும் புதுப்பித்த நிலையில் உள்ளன';
 
   @override
-  String get sampleRemovedFromQueue => 'மாதிரி வரிசையிலிருந்து அகற்றப்பட்டது';
+  String get sampleRemovedFromQueue => 'அறிக்கை அகற்றப்பட்டது';
 
   @override
   String regionConfTitle(String region) {
@@ -348,18 +348,18 @@ class AppLocalizationsTa extends AppLocalizations {
   String get farmerProfile => 'விவசாயி சுயவிவரம்';
 
   @override
-  String get sectionAiEngine => 'AI & ஆஃப்லைன் இயந்திரம்';
+  String get sectionAiEngine => 'பயிர் பராமரிப்பு';
 
   @override
   String get activeAgriculturalRegion => 'செயலில் உள்ள விவசாய பகுதி';
 
   @override
   String get activeRegionDesc =>
-      'உள்ளூர் நோய் காரணிகளுக்கு ஏற்றவாறு சரிசெய்யப்பட்ட பிராந்திய FP16 TFLite மாதிரியை ஏற்றுகிறது.';
+      'நீங்கள் தேர்ந்தெடுத்த பகுதிக்கான பயிர் பராமரிப்பு வழிகாட்டுதலைப் பயன்படுத்துகிறது.';
 
   @override
   String get nineRegionalModelsInstalled =>
-      '9 பிராந்திய FP16 மாதிரிகள் நிறுவப்பட்டன';
+      'பிராந்திய பயிர் வழிகாட்டிகள் தயாராக உள்ளன';
 
   @override
   String get ready => 'தயாராக உள்ளது';
@@ -371,7 +371,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get aboutCropGuard => 'CropGuard பற்றி';
 
   @override
-  String get versionInfo => 'AI நெல் நோய் கண்டறிதல் v1.0.0';
+  String get versionInfo => 'நெல் பயிர் பராமரிப்பு v1.0.0';
 
   @override
   String get fieldScanningGuide => 'வயல் ஸ்கேனிங் வழிகாட்டி';
@@ -402,11 +402,11 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String activeAIModelSet(String region) {
-    return 'AI மாதிரி $region என அமைக்கப்பட்டது';
+    return 'பயிர் வழிகாட்டி $region என அமைக்கப்பட்டது';
   }
 
   @override
-  String get cropGuardFooter => 'CropGuard இலங்கை • ஆஃப்லைன்-முதன்மை விவசாய AI';
+  String get cropGuardFooter => 'CropGuard இலங்கை • விவசாயிகளுக்காக';
 
   @override
   String get sectionLanguage => 'மொழி';

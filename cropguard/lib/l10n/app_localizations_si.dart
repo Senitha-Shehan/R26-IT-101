@@ -39,11 +39,11 @@ class AppLocalizationsSi extends AppLocalizations {
   String get onboardingTitle1 => 'CropGuard';
 
   @override
-  String get onboardingSubtitle1 => 'AI-Powered ගොයම් රෝග හඳුනාගැනීම';
+  String get onboardingSubtitle1 => 'ගොයම් රෝග හඳුනාගැනීම';
 
   @override
   String get onboardingDesc1 =>
-      'ශ්‍රී ලාංකීය කෘෂිකාර්මික කලාප සඳහා ගැලපෙන දේශීය AI ආකෘති භාවිතා කරමින් ක්ෂේත්‍රයේදීම ගොයම් රෝග හඳුනාගන්න.';
+      'ශ්‍රී ලංකාවේ වගා කලාපයන්ට ගැලපෙන මඟපෙන්වීමෙන් ක්ෂේත්‍රයේදීම ගොයම් සෞඛ්‍යය පරීක්ෂා කරන්න.';
 
   @override
   String get onboardingTitle2 => 'ඔබේ වගාව පරීක්ෂා කරන්න';
@@ -52,21 +52,20 @@ class AppLocalizationsSi extends AppLocalizations {
   String get onboardingFeature1 => 'සජීවී කැමරාව හෝ ගැලරිය භාවිත කරන්න';
 
   @override
-  String get onboardingFeature2 =>
-      '100% Offline — අන්තර්ජාල සම්බන්ධතාවයක් අවශ්‍ය නොවේ';
+  String get onboardingFeature2 => 'අන්තර්ජාලය නොමැතිවද භාවිත කළ හැක';
 
   @override
-  String get onboardingFeature3 => 'ක්ෂණික දේශීය TFLite FP16 රෝග හඳුනාගැනීම';
+  String get onboardingFeature3 => 'ක්ෂේත්‍රයේදී ඉක්මන් ප්‍රතිඵල ලබාගන්න';
 
   @override
   String get selectYourRegion => 'ඔබේ කලාපය තෝරන්න';
 
   @override
   String get regionSubtitle =>
-      'ඔබේ ශ්‍රී ලාංකීය කෘෂිකාර්මික කලාපය අනුව CropGuard ස්වයංක්‍රීයව AI ආකෘතිය තෝරා ගනී.';
+      'ඔබේ ශ්‍රී ලාංකීය වගා කලාපයට ගැලපෙන උපදෙස් CropGuard සකසයි.';
 
   @override
-  String get fp16LocalModel => 'FP16 දේශීය AI ආකෘතිය';
+  String get fp16LocalModel => 'ඔබේ කලාපයට නිර්දේශිතයි';
 
   @override
   String get confirmRegion => 'කලාපය තහවුරු කරන්න';
@@ -75,11 +74,11 @@ class AppLocalizationsSi extends AppLocalizations {
   String get preparingCropGuard => 'CropGuard සූදානම් කරමින්';
 
   @override
-  String get aiModel => 'AI ආකෘතිය';
+  String get aiModel => 'වගා උපදෙස්';
 
   @override
   String preparingModel(int percent) {
-    return 'ඔෆ්ලයින් භාවිතය සඳහා ආකෘතිය සූදානම් කරමින්... ($percent%)';
+    return 'වගා උපදෙස් සූදානම් කරමින්... ($percent%)';
   }
 
   @override
@@ -87,14 +86,14 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String allSetDesc(String region) {
-    return '$region සඳහා FP16 දේශීය ආකෘතිය පූරණය විය. CropGuard ඔෆ්ලයින් ක්ෂේත්‍ර භාවිතය සඳහා සම්පූර්ණයෙන් සකසා ඇත.';
+    return '$region සඳහා CropGuard සූදානම්. අන්තර්ජාලය නොමැතිවද භාවිත කළ හැක.';
   }
 
   @override
-  String get regionalModelInstalled => 'කලාපීය FP16 ආකෘතිය ස්ථාපිත විය';
+  String get regionalModelInstalled => 'කලාපීය වගා උපදෙස් සූදානම්';
 
   @override
-  String get offlineEngineReady => 'ඔෆ්ලයින් AI ඇන්ජිම සූදානම්';
+  String get offlineEngineReady => 'අන්තර්ජාලය නොමැතිව ක්‍රියා කරයි';
 
   @override
   String regionActive(String region) {
@@ -121,25 +120,24 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String get scanDesc =>
-      'ඔෆ්ලයින් AI භාවිතා කරමින් ගොයම් කොළ ඡායාරූපයෙන් රෝග හඳුනාගන්න.';
+      'අන්තර්ජාලය නොමැතිවද ගොයම් කොළ ඡායාරූපයෙන් රෝග පරීක්ෂා කරන්න.';
 
   @override
   String get startScan => 'ස්කෑන් කිරීම ආරම්භ කරන්න';
 
   @override
-  String get syncingOfflineSamples => 'ඔෆ්ලයින් සාම්පල සමමුහුර්ත කරමින්...';
+  String get syncingOfflineSamples => 'ඔබේ වාර්තා සුරකිමින්...';
 
   @override
-  String get offlineAIReady => '● ඔෆ්ලයින් AI සූදානම්';
+  String get offlineAIReady => '● අන්තර්ජාලය නොමැතිව භාවිතයට සූදානම්';
 
   @override
   String samplesQueuedForSync(int count) {
-    return 'සාම්පල $countක් සමමුහුර්ත කිරීමට හිඟව ඇත';
+    return 'යැවීමට බලා සිටින වාර්තා $countක්';
   }
 
   @override
-  String get allSamplesSynced =>
-      '✓ ඔෆ්ලයින් AI සූදානම් • සියලු සාම්පල සමමුහුර්ත විය';
+  String get allSamplesSynced => '✓ භාවිතයට සූදානම් • වාර්තා යාවත්කාලීනයි';
 
   @override
   String get recentDiagnoses => 'මෑත රෝග නිර්ණය';
@@ -178,11 +176,11 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String activeModel(String region) {
-    return 'සක්‍රිය ආකෘතිය: $region';
+    return 'වගා උපදෙස්: $region';
   }
 
   @override
-  String get localFP16Engine => 'දේශීය FP16 ඇන්ජිම';
+  String get localFP16Engine => 'ඔබේ දුරකථනයේ ක්‍රියා කරයි';
 
   @override
   String get positionLeaf => 'ගොයම් කොළ රාමුව ඇතුළේ තබන්න';
@@ -204,11 +202,11 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String runningLocalModel(String region) {
-    return 'දේශීය $region FP16 ආකෘතිය ක්‍රියාත්මක කරමින්';
+    return '$region සඳහා කොළය පරීක්ෂා කරමින්';
   }
 
   @override
-  String get offlineAIInference => '100% ඔෆ්ලයින් AI විශ්ලේෂණය';
+  String get offlineAIInference => 'අන්තර්ජාලය නොමැතිව ක්‍රියා කරයි';
 
   @override
   String get detectionResult => 'හඳුනාගැනීමේ ප්‍රතිඵලය';
@@ -232,7 +230,7 @@ class AppLocalizationsSi extends AppLocalizations {
   }
 
   @override
-  String get modelClassProbabilities => 'ආකෘති ප්‍රතිඵල (දේශීය FP16)';
+  String get modelClassProbabilities => 'විය හැකි ප්‍රතිඵල';
 
   @override
   String get helpImproveDiagnosis => 'රෝග නිර්ණය වැඩිදියුණු කිරීමට සහාය වන්න';
@@ -262,7 +260,7 @@ class AppLocalizationsSi extends AppLocalizations {
   String get diagnosisHistory => 'රෝග නිර්ණය ඉතිහාසය';
 
   @override
-  String get syncQueue => 'සමමුහුර්ත කරන්න';
+  String get syncQueue => 'සුරකින ලද වාර්තා';
 
   @override
   String get filterAll => 'සියල්ල';
@@ -285,7 +283,7 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String aiPredicted(String disease, String confidence) {
-    return 'AI අනාවැකිය: $disease ($confidence%)';
+    return 'විය හැකි ප්‍රතිඵලය: $disease ($confidence%)';
   }
 
   @override
@@ -301,7 +299,7 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String syncedSamples(int count) {
-    return 'සාම්පල $countක් සාර්ථකව සමමුහුර්ත කරන ලදී';
+    return 'වාර්තා $countක් සාර්ථකව යවන ලදී';
   }
 
   @override
@@ -309,7 +307,7 @@ class AppLocalizationsSi extends AppLocalizations {
       'සියලු සාම්පල යාවත්කාලීනයි (ඔෆ්ලයින් සතොස හිඟ නැත)';
 
   @override
-  String get sampleRemovedFromQueue => 'සාම්පලය ගොනුවෙන් ඉවත් කරන ලදී';
+  String get sampleRemovedFromQueue => 'වාර්තාව ඉවත් කරන ලදී';
 
   @override
   String regionConfTitle(String region) {
@@ -340,17 +338,17 @@ class AppLocalizationsSi extends AppLocalizations {
   String get farmerProfile => 'ගොවි ව්‍යාපෘතිය';
 
   @override
-  String get sectionAiEngine => 'AI සහ ඔෆ්ලයින් ඇන්ජිම';
+  String get sectionAiEngine => 'වගා උපදෙස්';
 
   @override
   String get activeAgriculturalRegion => 'සක්‍රිය කෘෂිකාර්මික කලාපය';
 
   @override
   String get activeRegionDesc =>
-      'දේශීය රෝග සාධක සඳහා ගැළපෙන කලාපීය FP16 TFLite ආකෘතිය පූරණය කරයි.';
+      'ඔබ තෝරාගත් කලාපයට ගැලපෙන වගා උපදෙස් භාවිත කරයි.';
 
   @override
-  String get nineRegionalModelsInstalled => 'කලාපීය FP16 ආකෘති 9 ස්ථාපිත';
+  String get nineRegionalModelsInstalled => 'කලාපීය වගා උපදෙස් සූදානම්';
 
   @override
   String get ready => 'සූදානම්';
@@ -362,7 +360,7 @@ class AppLocalizationsSi extends AppLocalizations {
   String get aboutCropGuard => 'CropGuard ගැන';
 
   @override
-  String get versionInfo => 'AI ගොයම් රෝග හඳුනාගැනීම v1.0.0';
+  String get versionInfo => 'ගොයම් වගා සත්කාරය v1.0.0';
 
   @override
   String get fieldScanningGuide => 'ක්ෂේත්‍ර ස්කෑනිං මාර්ගෝපදේශය';
@@ -392,12 +390,11 @@ class AppLocalizationsSi extends AppLocalizations {
 
   @override
   String activeAIModelSet(String region) {
-    return 'AI ආකෘතිය $region ලෙස සකසන ලදී';
+    return 'වගා උපදෙස් $region ලෙස සකසන ලදී';
   }
 
   @override
-  String get cropGuardFooter =>
-      'CropGuard ශ්‍රී ලංකා • ඔෆ්ලයින්-ප්‍රථම කෘෂිකාර්මික AI';
+  String get cropGuardFooter => 'CropGuard ශ්‍රී ලංකා • ගොවීන් සඳහා';
 
   @override
   String get sectionLanguage => 'භාෂාව';

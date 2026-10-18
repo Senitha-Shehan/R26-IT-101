@@ -101,7 +101,7 @@ class _RegionSelectScreenState extends State<RegionSelectScreen> {
               const SizedBox(height: 8),
               Text(
                 l?.regionSubtitle ??
-                    'CropGuard automatically selects tuned FP16 AI models based on your Sri Lankan agricultural zone.',
+                    'CropGuard adjusts its advice to suit your Sri Lankan farming region.',
                 style: const TextStyle(
                   color: AppTheme.textSecondary,
                   fontSize: 14,
@@ -172,7 +172,7 @@ class _RegionSelectScreenState extends State<RegionSelectScreen> {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              l?.fp16LocalModel ?? 'FP16 TFLite Local Model',
+                              l?.fp16LocalModel ?? 'Recommended for your region',
                               style: const TextStyle(
                                 color: AppTheme.textSecondary,
                                 fontSize: 12,
@@ -232,7 +232,7 @@ class _RegionSelectScreenState extends State<RegionSelectScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            '$localizedRegionName ${l?.aiModel ?? 'AI Model'}',
+            '$localizedRegionName ${l?.aiModel ?? 'Crop care guide'}',
             style: const TextStyle(
               color: AppTheme.accentGreen,
               fontSize: 16,
@@ -252,7 +252,7 @@ class _RegionSelectScreenState extends State<RegionSelectScreen> {
           const SizedBox(height: 16),
           Text(
             l?.preparingModel(percentInt) ??
-                'Preparing model for offline use... ($percentInt%)',
+                'Preparing your crop care guide... ($percentInt%)',
             style: const TextStyle(color: AppTheme.textSecondary, fontSize: 14),
           ),
         ],

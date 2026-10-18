@@ -39,11 +39,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get onboardingTitle1 => 'CropGuard';
 
   @override
-  String get onboardingSubtitle1 => 'AI-Powered Paddy Disease Detection';
+  String get onboardingSubtitle1 => 'Paddy Disease Detection';
 
   @override
   String get onboardingDesc1 =>
-      'Instantly diagnose rice crop diseases in the field using local deep learning models optimized for Sri Lankan agricultural zones.';
+      'Check rice crop health in the field with guidance suited to Sri Lankan farming regions.';
 
   @override
   String get onboardingTitle2 => 'Scan Your Crop';
@@ -53,21 +53,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingFeature2 =>
-      'Runs 100% offline — no internet connection required';
+      'Works without internet — no connection needed';
 
   @override
   String get onboardingFeature3 =>
-      'Instant local TFLite FP16 disease classification';
+      'Get quick results while you are in the field';
 
   @override
   String get selectYourRegion => 'Select Your Region';
 
   @override
   String get regionSubtitle =>
-      'CropGuard automatically selects tuned FP16 AI models based on your Sri Lankan agricultural zone.';
+      'CropGuard adjusts its advice to suit your Sri Lankan farming region.';
 
   @override
-  String get fp16LocalModel => 'FP16 TFLite Local Model';
+  String get fp16LocalModel => 'Recommended for your region';
 
   @override
   String get confirmRegion => 'Confirm Region';
@@ -76,11 +76,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get preparingCropGuard => 'Preparing CropGuard';
 
   @override
-  String get aiModel => 'AI Model';
+  String get aiModel => 'Crop care guide';
 
   @override
   String preparingModel(int percent) {
-    return 'Preparing model for offline use... ($percent%)';
+    return 'Preparing your crop care guide... ($percent%)';
   }
 
   @override
@@ -88,14 +88,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String allSetDesc(String region) {
-    return 'FP16 local model loaded for $region. CropGuard is completely configured for offline field use.';
+    return 'CropGuard is ready to help you care for crops in $region, even without internet.';
   }
 
   @override
-  String get regionalModelInstalled => 'Regional FP16 Model Installed';
+  String get regionalModelInstalled => 'Regional crop guide ready';
 
   @override
-  String get offlineEngineReady => 'Offline Inference Engine Ready';
+  String get offlineEngineReady => 'Works without internet';
 
   @override
   String regionActive(String region) {
@@ -122,24 +122,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scanDesc =>
-      'Detect possible diseases from a paddy leaf photo using offline AI.';
+      'Check for possible diseases from a paddy leaf photo, even without internet.';
 
   @override
   String get startScan => 'Start Scan';
 
   @override
-  String get syncingOfflineSamples => 'Syncing offline samples...';
+  String get syncingOfflineSamples => 'Saving your reports...';
 
   @override
-  String get offlineAIReady => '● Offline AI Ready';
+  String get offlineAIReady => '● Ready to use without internet';
 
   @override
   String samplesQueuedForSync(int count) {
-    return '$count sample(s) queued for sync';
+    return '$count report(s) waiting to be sent';
   }
 
   @override
-  String get allSamplesSynced => '✓ Offline AI Ready • All samples synced';
+  String get allSamplesSynced => '✓ Ready to use • Reports are up to date';
 
   @override
   String get recentDiagnoses => 'Recent Diagnoses';
@@ -178,11 +178,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String activeModel(String region) {
-    return 'Active Model: $region';
+    return 'Crop guide: $region';
   }
 
   @override
-  String get localFP16Engine => 'Local FP16 Engine';
+  String get localFP16Engine => 'Works on your phone';
 
   @override
   String get positionLeaf => 'Position the paddy leaf inside the frame';
@@ -204,11 +204,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String runningLocalModel(String region) {
-    return 'Running local $region FP16 model';
+    return 'Checking your leaf for $region...';
   }
 
   @override
-  String get offlineAIInference => '100% Offline AI Inference';
+  String get offlineAIInference => 'Works without internet';
 
   @override
   String get detectionResult => 'Detection Result';
@@ -232,8 +232,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get modelClassProbabilities =>
-      'Model Class Probabilities (Local FP16)';
+  String get modelClassProbabilities => 'Possible matches';
 
   @override
   String get helpImproveDiagnosis => 'Help Improve This Diagnosis';
@@ -264,7 +263,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get diagnosisHistory => 'Diagnosis History';
 
   @override
-  String get syncQueue => 'Sync Queue';
+  String get syncQueue => 'Saved Reports';
 
   @override
   String get filterAll => 'All';
@@ -287,7 +286,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String aiPredicted(String disease, String confidence) {
-    return 'AI Predicted: $disease ($confidence%)';
+    return 'Possible result: $disease ($confidence%)';
   }
 
   @override
@@ -303,15 +302,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String syncedSamples(int count) {
-    return 'Successfully synced $count sample(s) with cloud database';
+    return 'Successfully sent $count report(s)';
   }
 
   @override
-  String get allSamplesUpToDate =>
-      'All samples up to date (Queue synced or offline)';
+  String get allSamplesUpToDate => 'Your saved reports are up to date';
 
   @override
-  String get sampleRemovedFromQueue => 'Sample removed from queue';
+  String get sampleRemovedFromQueue => 'Report removed';
 
   @override
   String regionConfTitle(String region) {
@@ -342,17 +340,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get farmerProfile => 'Farmer Profile';
 
   @override
-  String get sectionAiEngine => 'AI & OFFLINE ENGINE';
+  String get sectionAiEngine => 'CROP CARE';
 
   @override
   String get activeAgriculturalRegion => 'Active Agricultural Region';
 
   @override
   String get activeRegionDesc =>
-      'Loads regional FP16 TFLite model tuned for local disease factors.';
+      'Use crop care guidance suited to your selected region.';
 
   @override
-  String get nineRegionalModelsInstalled => '9 Regional FP16 Models Installed';
+  String get nineRegionalModelsInstalled => 'Regional crop guides ready';
 
   @override
   String get ready => 'Ready';
@@ -364,7 +362,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get aboutCropGuard => 'About CropGuard';
 
   @override
-  String get versionInfo => 'AI Paddy Disease Detection v1.0.0';
+  String get versionInfo => 'Paddy crop care v1.0.0';
 
   @override
   String get fieldScanningGuide => 'Field Scanning Guide';
@@ -387,19 +385,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tip4 =>
-      '• Predictions under 80% confidence are automatically saved for expert review.';
+      '• Results that are not clear are saved so they can be checked later.';
 
   @override
   String get gotIt => 'Got it';
 
   @override
   String activeAIModelSet(String region) {
-    return 'Active AI Model set to $region';
+    return 'Crop guide set to $region';
   }
 
   @override
-  String get cropGuardFooter =>
-      'CropGuard Sri Lanka • Offline-First Agricultural AI';
+  String get cropGuardFooter => 'CropGuard Sri Lanka • Made for farmers';
 
   @override
   String get sectionLanguage => 'LANGUAGE';

@@ -197,13 +197,13 @@ class _DetectionScreenState extends State<DetectionScreen>
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
-                      l?.activeModel(regionName) ?? 'Active Model: $regionName',
+                      l?.activeModel(regionName) ?? 'Crop guide: $regionName',
                       style: const TextStyle(
                           color: AppTheme.textPrimary, fontSize: 13, fontWeight: FontWeight.w600),
                     ),
                   ),
                   Text(
-                    l?.localFP16Engine ?? 'Local FP16 Engine',
+                    l?.localFP16Engine ?? 'Works on your phone',
                     style: const TextStyle(
                         color: AppTheme.accentGreen, fontSize: 11, fontWeight: FontWeight.bold),
                   ),
@@ -410,7 +410,7 @@ class _DetectionScreenState extends State<DetectionScreen>
           ),
           const SizedBox(height: 8),
           Text(
-            l?.runningLocalModel(regionName) ?? 'Running local $regionName FP16 model',
+            l?.runningLocalModel(regionName) ?? 'Checking your leaf for $regionName...',
             textAlign: TextAlign.center,
             style: const TextStyle(color: AppTheme.textSecondary, fontSize: 14),
           ),
@@ -427,7 +427,7 @@ class _DetectionScreenState extends State<DetectionScreen>
                 const Icon(Icons.wifi_off_rounded, color: AppTheme.accentGreen, size: 16),
                 const SizedBox(width: 6),
                 Text(
-                  l?.offlineAIInference ?? '100% Offline AI Inference',
+                  l?.offlineAIInference ?? 'Works without internet',
                   style: const TextStyle(
                       color: AppTheme.accentGreen, fontSize: 12, fontWeight: FontWeight.bold),
                 ),
